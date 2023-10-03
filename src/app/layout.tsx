@@ -1,13 +1,17 @@
+'use client'
+
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Navbar from './components/navbar'
+import { AuthContextProvider } from './context/authContext';
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'TradeMate',
-  description: 'A barter app by Gaurav Mehla and Anshdeep Singh',
-}
+// export const metadata: Metadata = {
+//   title: 'TradeMate',
+//   description: 'A barter app by Gaurav Mehla and Anshdeep Singh',
+// }
 
 export default function RootLayout({
   children,
@@ -16,10 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-        <head>
-            <link rel="stylesheet" href="yoho" />
-        </head>
-      <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+            <AuthContextProvider>
+                <Navbar/>
+                {children}
+            </AuthContextProvider>
+        </body>
     </html>
   )
 }
