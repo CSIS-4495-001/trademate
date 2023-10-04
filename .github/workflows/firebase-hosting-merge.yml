@@ -6,12 +6,24 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - main
+permissions:
+    checks: write
+    contents: read
+    pull-requests: write
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm i && npm run build
+      - run: |
+            echo "NEXT_PUBLIC_apikey=${{ secrets.NEXT_PUBLIC_APIKEY }}" >> .env
+            echo "NEXT_PUBLIC_authDomain=${{ secrets.NEXT_PUBLIC_AUTHDOMAIN }}" >> .env
+            echo "NEXT_PUBLIC_projectId=${{ secrets.NEXT_PUBLIC_PROJECTID }}" >> .env
+            echo "NEXT_PUBLIC_storageBucket=${{ secrets.NEXT_PUBLIC_STORAGEBUCKET }}" >> .env
+            echo "NEXT_PUBLIC_messagingSenderId=${{ secrets.NEXT_PUBLIC_MESSAGINGSENDERID }}" >> .env
+            echo "NEXT_PUBLIC_appId=${{ secrets.NEXT_PUBLIC_APPID }}" >> .env
+            echo "NEXT_PUBLIC_measurementId=${{ secrets.NEXT_PUBLIC_MEASUREMENTID }}" >> .env
+            npm i && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
