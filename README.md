@@ -31,4 +31,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Firestore
 
-Check live here - [trademate.mehla.in](https://trademate.mehla.in)
+Check live here - [trademate.mehla.in](https://trademate-ccec1.web.app/)
