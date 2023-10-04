@@ -4,7 +4,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navbar from './components/navbar'
-import { AuthContextProvider } from './context/authContext.js';
+import { AuthContextProvider } from './context/AuthContext.js';
 
 const inter = Inter({ subsets: ['latin'] })
 

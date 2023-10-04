@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import react, {useEffect, useState} from 'react';
-import { UserAuth } from '../context/authContext.js';
+import { UserAuth } from '../context/AuthContext.js';
 
 const Navbar = () => {
     const { user, googleSignIn, logOut } = UserAuth();
