@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import react, {useEffect, useState} from 'react';
 import { UserAuth } from '../context/AuthContext.js';
+import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
 
 const Navbar = () => {
     const { user, googleSignIn, logOut } = UserAuth();
@@ -21,8 +22,6 @@ const Navbar = () => {
             console.log(error);
         }
     }
-
-    console.log(user);
 
     useEffect(() => {
         const checkAuthentication = async () => {
