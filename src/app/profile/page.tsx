@@ -1,6 +1,6 @@
 'use client'
 import react, {useEffect, useState} from 'react';
-import { UserAuth } from '../context/authContext';
+import { UserAuth } from '../context/authContext.js';
 import Spinner from '../components/Spinner';
 
 const profile = () => {
