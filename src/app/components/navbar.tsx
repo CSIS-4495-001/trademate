@@ -44,7 +44,7 @@ return(<nav className="relative flex items-center justify-between sm:h-10 md:jus
     </div>
 </div>
 <div className="hidden md:flex md:space-x-10">
-    <Link href="/" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
+    <Link href="/explore" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
         Explore
     </Link>
     <Link href="/profile" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">

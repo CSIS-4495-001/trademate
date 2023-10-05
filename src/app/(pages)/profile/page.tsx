@@ -2,10 +2,16 @@
 import react, { useEffect, useState } from "react";
 import { UserAuth } from "../../context/AuthContext.js";
 import Spinner from "../../components/Spinner";
+import MultiStepForm from "../../components/MultiStepForm";
 
 const profile = () => {
   const { user } = UserAuth();
   const [loading, setLoading] = useState(true);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -70,10 +76,17 @@ const profile = () => {
         </li>
       </ul>
       <div className="p-4 border-t mx-8 mt-2">
-        <button className="w-1/4 block mx-auto rounded-full bg-gray-900 hover:shadow-lg font-semibold text-white px-4 py-1">
-          Follow
+        <button className="w-1/4 block mx-auto rounded-full bg-gray-900 hover:shadow-lg font-semibold text-white px-4 py-1"
+        onClick={openModal}>
+          Create Post
         </button>
-      </div>
+        {isModalOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-md">
+            <MultiStepForm onClose={closeModal} />
+          </div>
+        </div>
+      )}      </div>
     </div>
   );
 };
