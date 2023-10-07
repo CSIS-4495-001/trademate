@@ -26,14 +26,14 @@ const MapComponent: React.FC = () => {
     }
   };
 
-  // useEffect to get user's location when the component mounts
   useEffect(() => {
     getUserLocation();
-  }, []);
+  }, [circleRadius]);
 
   // Function to handle radius change
   const handleRadiusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newRadius = parseInt(event.target.value, 10);
+    console.log('New radius:', newRadius);
     setCircleRadius(newRadius);
   };
 
