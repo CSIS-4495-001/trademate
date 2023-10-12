@@ -1,4 +1,6 @@
 'use client';
+ 
+import MapComponent from '../../components/MapComponent';
 
 import react, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
@@ -15,9 +17,16 @@ const page = () => {
     });
 
     return (
-        <div className='p-4'>
+
+<div className="flex flex-1 items-center justify-center p-6">
+    <div className="w-full max-w-lg">
+        <MapComponent></MapComponent>
+              <div className='p-4'>
             <h1>Explore page</h1>
         </div>
+    </div>
+</div>
+
     );
 }
 
