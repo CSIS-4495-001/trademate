@@ -7,6 +7,7 @@ import Spinner from "../../components/Spinner";
 const profile = () => {
   const { user } = UserAuth();
   const [loading, setLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
   const router = useRouter();
 
 
@@ -15,6 +16,27 @@ const profile = () => {
     //   await new Promise((resolve) => setTimeout(resolve, 500));
       setLoading(false);
     };
+
+    // Check if Geolocation is supported by the browser
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+        (position) => {
+            // Get the user's latitude and longitude
+            const { latitude, longitude } = position.coords;
+
+            // Store the location in the state variable
+            setUserLocation({ latitude, longitude });
+        },
+        (error) => {
+            // Handle any errors that occur during location retrieval
+            console.error("Error getting location:", error);
+        }
+        );
+    } else {
+        // Geolocation is not supported by the browser
+        console.error("Geolocation is not supported");
+    }
+
 
     checkAuthentication();
   }, [user]);
@@ -76,6 +98,16 @@ const profile = () => {
           Follow
         </button>
       </div>
+        <div>
+            {userLocation ? (
+            <div>
+                Latitude: {userLocation.latitude}, Longitude: {userLocation.longitude}
+            </div>
+            ) : (
+            <div>Loading location...</div>
+            )}
+            {/* The rest of your component */}
+        </div>
     </div>
   );
 };
