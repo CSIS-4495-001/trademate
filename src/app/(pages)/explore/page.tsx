@@ -1,6 +1,7 @@
 'use client';
-        
+ 
 import MapComponent from '../../components/MapComponent';
+
 import react, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { UserAuth } from "../../context/AuthContext.js";

@@ -1,9 +1,9 @@
 "use client";
 import react, { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
 import { UserAuth } from "../../context/AuthContext.js";
 import Spinner from "../../components/Spinner";
 import MultiStepForm from "../../components/MultiStepForm";
-import { useRouter } from 'next/navigation';
 
 
 const profile = () => {
@@ -18,11 +18,14 @@ const profile = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      console.log("User Details:", JSON.stringify(user));
+  useEffect(() => {
+    if(!user) {
+        router.push('/');
+    }
+
+    const checkAuthentication = async () => {
+    //   await new Promise((resolve) => setTimeout(resolve, 500));
       setLoading(false);
 
     };
@@ -50,7 +53,9 @@ const profile = () => {
       console.error("Geolocation is not supported");
   }
     // checkAuthentication();
+
   }, [user]);
+
   return (
     <div className="max-w-full sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900">
       <div className="rounded-t-lg h-32 overflow-hidden">

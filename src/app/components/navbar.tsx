@@ -21,6 +21,8 @@ const Navbar = () => {
   const handleSignOut = async () => {
     try {
       await logOut();
+      console.log("Logged out, redirecting to home");
+      router.push('/');    // Redirect to home
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +38,8 @@ const Navbar = () => {
   }, [user]);
 
 
-return(<nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2">
+return(
+<nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2">
 <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
     <div className="flex items-center justify-between w-full md:w-auto">
         <div className="-mr-2 flex items-center md:hidden">
@@ -46,6 +49,7 @@ return(<nav className="relative flex items-center justify-between sm:h-10 md:jus
         </div>
     </div>
 </div>
+
 {!user ? (
     <div></div>
 ) : (
@@ -76,7 +80,7 @@ return(<nav className="relative flex items-center justify-between sm:h-10 md:jus
         </ul>
     ) : (
         <div className="flex items-center">
-            <p className="mr-4">Welcome, <br/>{user.displayName}</p>
+            {/* <p className="mr-4">Welcome, <br/>{user.displayName}</p> */}
             <button
                 onClick={handleSignOut}
                 className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-red-600"
@@ -89,7 +93,5 @@ return(<nav className="relative flex items-center justify-between sm:h-10 md:jus
 </nav>
 );
 
-
 };
-
 export default Navbar;

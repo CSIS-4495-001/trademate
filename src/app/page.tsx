@@ -5,11 +5,10 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from './context/AuthContext';
 
-
 export default function Home() {
-
     const { user } = UserAuth();
     const router = useRouter();
+
 
     let handleClick = () => {
         const analytics = getAnalytics();
