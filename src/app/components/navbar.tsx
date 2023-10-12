@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from 'next/navigation'
 import react, { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext.js";
 import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
@@ -6,6 +7,8 @@ import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
 const Navbar = () => {
   const { user, googleSignIn, logOut } = UserAuth();
   const [loading, setLoading] = react.useState(true);
+  const router = useRouter()
+
 
   const handleSignIn = async () => {
     try {
@@ -43,17 +46,22 @@ return(<nav className="relative flex items-center justify-between sm:h-10 md:jus
         </div>
     </div>
 </div>
-<div className="hidden md:flex md:space-x-10">
-    <Link href="/explore" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
-        Explore
-    </Link>
-    <Link href="/profile" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
-        Profile
-    </Link>
-    <Link href="/chat" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
-        Chat
-    </Link>
-</div>
+{!user ? (
+    <div></div>
+) : (
+    <div className="hidden md:flex md:space-x-10">
+        <Link href="/explore" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
+            Explore
+        </Link>
+        <Link href="/profile" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
+            Profile
+        </Link>
+        <Link href="/chat" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
+            Chat
+        </Link>
+    </div>
+)}
+
 <div className="hidden md:absolute md:flex md:items-center md:justify-end md:inset-y-0 md:right-0">
     {loading ? null : !user ? (
         <ul className="flex">
