@@ -53,7 +53,7 @@ return(<nav className="relative flex items-center justify-between sm:h-10 md:jus
     <div></div>
 ) : (
     <div className="hidden md:flex md:space-x-10">
-        <Link href="/" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
+        <Link href="/explore" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
             Explore
         </Link>
         <Link href="/profile" className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out">
@@ -79,7 +79,7 @@ return(<nav className="relative flex items-center justify-between sm:h-10 md:jus
         </ul>
     ) : (
         <div className="flex items-center">
-            <p className="mr-4">Welcome, <br/>{user.displayName}</p>
+            {/* <p className="mr-4">Welcome, <br/>{user.displayName}</p> */}
             <button
                 onClick={handleSignOut}
                 className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-red-600"

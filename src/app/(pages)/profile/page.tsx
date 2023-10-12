@@ -12,6 +12,10 @@ const profile = () => {
 
 
   useEffect(() => {
+    if(!user) {
+        router.push('/');
+    }
+
     const checkAuthentication = async () => {
     //   await new Promise((resolve) => setTimeout(resolve, 500));
       setLoading(false);
