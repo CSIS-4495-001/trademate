@@ -2,4 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-
+.message{
+    &.owner{
+        flex-direction: row-reverse;
+        p{
+            background-color: beige;
+        }
+    }
+}
