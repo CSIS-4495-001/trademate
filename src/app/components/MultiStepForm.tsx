@@ -25,10 +25,12 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, files } = e.target;
-  
-    if (type === 'file' && files) {
+
+    if (type === "file" && files) {
       // Handle file input
-      const picturesArray = Array.from(files).map((file) => URL.createObjectURL(file));
+      const picturesArray = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
       setFormData((prevData) => ({ ...prevData, [name]: picturesArray }));
     } else {
       // Handle other input types
@@ -51,116 +53,116 @@ const MultiStepForm: React.FC<MultiStepFormProps> = ({ onClose }) => {
         <button className="close-button" onClick={onClose}>
           &times;
         </button>
-        <form className="px-8 pt-6 pb-8 mb-4 bg-white rounded w-full max-w-md">        
-            {step === 1 && (
-          <div>
-            <h2>Step 1</h2>
-            <label className="block mb-2 text-sm font-bold text-gray-700">
-              Name:
-            </label>
-            <input
-              className="w-full mb-2 px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-              type="text"
-              name="name"
-              value={formData.item_name}
-              onChange={handleInputChange}
-            />
-            <button
-              className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-              onClick={nextStep}
-            >
-              Next
-            </button>
-          </div>
-        )}
-        {step === 2 && (
-          <div>
-            <h2>Step 2</h2>
-            <label className="block mb-2 text-sm font-bold text-gray-700">
-              Description:
-            </label>
-            <input
-              className="w-full mb-2 px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-              type="email"
-              name="email"
-              value={formData.item_description}
-              onChange={handleInputChange}
-            />
-            <div className="flex justify-between">
+        <form className="px-8 pt-6 pb-8 mb-4 bg-white rounded w-full max-w-md">
+          {step === 1 && (
+            <div>
+              <h2>Step 1</h2>
+              <label className="block mb-2 text-sm font-bold text-gray-700">
+                Name:
+              </label>
+              <input
+                className="w-full mb-2 px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text"
+                name="name"
+                value={formData.item_name}
+                onChange={handleInputChange}
+              />
               <button
-                className="w-1/2 mr-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                onClick={prevStep}
-              >
-                Back
-              </button>
-              <button
-                className="w-1/2 ml-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
                 onClick={nextStep}
               >
                 Next
               </button>
             </div>
-          </div>
-        )}
+          )}
+          {step === 2 && (
+            <div>
+              <h2>Step 2</h2>
+              <label className="block mb-2 text-sm font-bold text-gray-700">
+                Description:
+              </label>
+              <input
+                className="w-full mb-2 px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="email"
+                name="email"
+                value={formData.item_description}
+                onChange={handleInputChange}
+              />
+              <div className="flex justify-between">
+                <button
+                  className="w-1/2 mr-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+                <button
+                  className="w-1/2 ml-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                  onClick={nextStep}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
 
-        {step === 3 && (
-          <div>
-            <h2>Step 3</h2>
-            <label className="block mb-2 text-sm font-bold text-gray-700">
-              Price:
-            </label>
-            <input
-              type="password"
-              name="password"
-              className="w-full mb-2 px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-              value={formData.item_price}
-              onChange={handleInputChange}
-            />
-            <div className="flex justify-between">
-              <button
-                className="w-1/2 mr-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                onClick={prevStep}
-              >
-                Back
-              </button>
-              <button
-                className="w-1/2 ml-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                onClick={nextStep}
-              >
-                Next
-              </button>
+          {step === 3 && (
+            <div>
+              <h2>Step 3</h2>
+              <label className="block mb-2 text-sm font-bold text-gray-700">
+                Price:
+              </label>
+              <input
+                type="password"
+                name="password"
+                className="w-full mb-2 px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                value={formData.item_price}
+                onChange={handleInputChange}
+              />
+              <div className="flex justify-between">
+                <button
+                  className="w-1/2 mr-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+                <button
+                  className="w-1/2 ml-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                  onClick={nextStep}
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
-        )}
-              {step === 4 && (
-        <div>
-          <h2>Step 4 - Upload Pictures</h2>
-          <label className="block mb-2 text-sm font-bold text-gray-700">
-            Pictures:
-          </label>
-          <input
-            type="file"
-            name="item_pictures"
-            accept="image/*"
-            multiple
-            onChange={handleInputChange}
-          />
-          <div className="flex justify-between">
-            <button
-              className="w-1/2 mr-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-              onClick={prevStep}
-            >
-              Back
-            </button>
-            <button
-              className="w-1/2 ml-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-      )}
+          )}
+          {step === 4 && (
+            <div>
+              <h2>Step 4 - Upload Pictures</h2>
+              <label className="block mb-2 text-sm font-bold text-gray-700">
+                Pictures:
+              </label>
+              <input
+                type="file"
+                name="item_pictures"
+                accept="image/*"
+                multiple
+                onChange={handleInputChange}
+              />
+              <div className="flex justify-between">
+                <button
+                  className="w-1/2 mr-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                  onClick={prevStep}
+                >
+                  Back
+                </button>
+                <button
+                  className="w-1/2 ml-1 px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          )}
         </form>
       </div>
     </div>
