@@ -1,15 +1,18 @@
 // Import necessary libraries
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 // Define the component
 const MapComponent: React.FC = () => {
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const [circleRadius, setCircleRadius] = useState<number>(1000); // Default radius in meters
 
   // Function to get user's location
   const getUserLocation = () => {
-    if ('geolocation' in navigator) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setUserLocation({
@@ -18,11 +21,11 @@ const MapComponent: React.FC = () => {
           });
         },
         (error) => {
-          console.error('Error getting user location:', error);
+          console.error("Error getting user location:", error);
         }
       );
     } else {
-      console.error('Geolocation is not supported by your browser');
+      console.error("Geolocation is not supported by your browser");
     }
   };
 
@@ -33,7 +36,7 @@ const MapComponent: React.FC = () => {
   // Function to handle radius change
   const handleRadiusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newRadius = parseInt(event.target.value, 10);
-    console.log('New radius:', newRadius);
+    console.log("New radius:", newRadius);
     setCircleRadius(newRadius);
   };
 
@@ -63,7 +66,12 @@ const MapComponent: React.FC = () => {
           </svg>
           <div className="absolute top-2 right-2">
             <label htmlFor="radius">Select Radius: </label>
-            <select id="radius" name="radius" onChange={handleRadiusChange} value={circleRadius}>
+            <select
+              id="radius"
+              name="radius"
+              onChange={handleRadiusChange}
+              value={circleRadius}
+            >
               <option value="500">500m</option>
               <option value="1000">1000m</option>
               <option value="2000">2000m</option>
