@@ -15,6 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+        <head>
+            <title>TradeMate - A project by Gaurav and Anshdeep</title>
+        </head>
         <body className={inter.className}>
             <AuthContextProvider>
                 <Navbar/>
