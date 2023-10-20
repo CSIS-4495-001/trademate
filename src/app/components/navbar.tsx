@@ -6,6 +6,7 @@ import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
 
 const Navbar = () => {
   const { user, googleSignIn, logOut } = UserAuth();
+  const [err, setErr] = useState(false);
   const [loading, setLoading] = react.useState(true);
   const router = useRouter();
 
@@ -14,6 +15,7 @@ const Navbar = () => {
       await googleSignIn();
     } catch (error) {
       console.log(error);
+      setErr(true);
     }
   };
 
@@ -122,6 +124,7 @@ const Navbar = () => {
                 </button>
               </div>
             </li>
+            {err ? <p className="text-red-500">Error signing in</p> : null}
           </ul>
         ) : (
           <div className="flex items-center">
