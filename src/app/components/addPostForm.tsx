@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios"; // Import the axios library
 import { UserAuth } from "@/app/context/AuthContext.js";
+import { collection, addDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "@/app/firebase";
 
 const AddPostForm = ({}) => {
   const { user } = UserAuth();
@@ -14,16 +17,48 @@ const AddPostForm = ({}) => {
   const [showMapModal, setShowMapModal] = useState(false); // State to control the map modal
   const [selectedLocation, setSelectedLocation] = useState({ lat: 0, lng: 0 }); // Store selected location
   const [isLocationSelected, setIsLocationSelected] = useState(false);
+  const [isLocationInputFocused, setIsLocationInputFocused] = useState(false);
 
   const inputRef = useRef(null);
 
   let autocompleteService: any;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // You can perform any necessary validation here
     // and then save the data and close the form
 
-    console.log(title, description, images, location, user);
+    console.log(title, description, images, location, user, selectedLocation);
+
+    const imageDownloadURLs = await Promise.all(
+      images.map((image) => uploadImage(image))
+    );
+
+    // Create a new post object with the form data
+    const newPost = {
+      title,
+      description,
+      images: imageDownloadURLs, // Assuming you want to save image URLs
+      location,
+      user: user.uid, // You may need to adjust this based on your user data structure
+      coords: selectedLocation,
+    };
+
+    console.log({ newPost });
+    // Add the new post to Firestore
+    try {
+      // Add the new post to Firestore
+      const docRef = await addDoc(collection(db, "posts"), newPost);
+      console.log("Post added with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding post: ", error);
+    }
+  };
+
+  const uploadImage = async (imageFile: File) => {
+    const storageRef = ref(storage, `posts/${Date.now()}_${imageFile.name}`);
+    const snapshot = await uploadBytes(storageRef, imageFile);
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +90,7 @@ const AddPostForm = ({}) => {
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(e.target.value);
+    setIsLocationSelected(false);
   };
 
   const openMapModal = () => {
@@ -148,10 +184,17 @@ const AddPostForm = ({}) => {
     getLatLngFromLocation(prediction.description);
     // Set the flag to indicate that a location has been selected
     setIsLocationSelected(true);
+
+    setIsLocationInputFocused(false);
   };
 
   useEffect(() => {
-    if (location && inputRef.current && !isLocationSelected) {
+    if (
+      location &&
+      inputRef.current &&
+      !isLocationSelected &&
+      isLocationInputFocused
+    ) {
       if (window.google && window.google.maps) {
         autocompleteService =
           new window.google.maps.places.AutocompleteService();
@@ -162,8 +205,11 @@ const AddPostForm = ({}) => {
           }
         );
       }
+    } else {
+      // If the input is not focused or empty, clear the predictions
+      setPlacePredictions([]);
     }
-  }, [location, isLocationSelected]);
+  }, [location, isLocationSelected, isLocationInputFocused]);
 
   const createDraggableMarker = (map: google.maps.Map) => {
     const marker = new window.google.maps.Marker({
@@ -241,6 +287,7 @@ const AddPostForm = ({}) => {
           ref={inputRef}
           value={location}
           onChange={handleLocationChange}
+          onFocus={() => setIsLocationInputFocused(true)}
         />
         {/* <div
             className="right-4 top-2 cursor-pointer"
