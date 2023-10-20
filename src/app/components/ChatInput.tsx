@@ -22,13 +22,6 @@ const ChatInput = () => {
   const { user } = UserAuth();
   const { data } = ChatAuth();
 
-  const handleSend = async () => {
-    if (image) {
-      const storageRef = ref(storage, myUUID);
-
-      const uploadTask = uploadBytesResumable(storageRef, image);
-
-
     const handleSend = async () => {
 
         if(image){
@@ -62,23 +55,9 @@ const ChatInput = () => {
                     });
                 }
             );
-            
 
         }else{
          await updateDoc(doc(db,"chats",data.chatId),{
-            messages: arrayUnion({
-                id: myUUID,
-                text,
-                senderId: user.uid,
-                date: Timestamp.now(),
-                image: downloadURL,
-              }),
-            });
-          });
-        }
-      );
-    } else {
-      await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: myUUID,
           text,
