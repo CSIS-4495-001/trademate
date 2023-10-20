@@ -4,10 +4,13 @@ import { UserAuth } from "@/app/context/AuthContext.js";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/app/firebase";
+import { serverTimestamp } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 const AddPostForm = ({}) => {
   const { user } = UserAuth();
   const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [location, setLocation] = useState("");
@@ -33,14 +36,19 @@ const AddPostForm = ({}) => {
       images.map((image) => uploadImage(image))
     );
 
+    const postId = uuidv4();
+
     // Create a new post object with the form data
     const newPost = {
+      postId,
       title,
       description,
+      price,
       images: imageDownloadURLs, // Assuming you want to save image URLs
       location,
       user: user.uid, // You may need to adjust this based on your user data structure
       coords: selectedLocation,
+      createdAt: serverTimestamp(),
     };
 
     console.log({ newPost });
@@ -256,6 +264,18 @@ const AddPostForm = ({}) => {
           className="w-full border rounded-lg p-2"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="price" className="block text-gray-700 font-medium mb-2">
+          Price
+        </label>
+        <input
+          type="number"
+          id="price"
+          className="w-full border rounded-lg p-2"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
         />
       </div>
       <div className="mb-4">
