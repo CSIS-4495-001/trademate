@@ -23,7 +23,9 @@ const ChatInput = () => {
 
         if(image){
 
-            const storageRef = ref(storage,myUUID);
+            let filename = "chats/"+myUUID;
+
+            const storageRef = ref(storage,filename);
 
             const uploadTask = uploadBytesResumable(storageRef,image);
         
