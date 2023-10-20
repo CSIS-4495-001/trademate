@@ -19,6 +19,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const {user} = UserAuth();
   const {data} = ChatAuth();
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    ref.current?.scrollIntoView({
+      behavior: "smooth"
+    });
+  }, [message]);
+
   console.log("message => ",message);
   if (user && message.senderId === user.uid) {
     isMainUser = true;
@@ -26,7 +34,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     isMainUser = false;
   }
   return (
-    <div className={`flex ${isMainUser ? 'justify-end' : 'justify-start'} items-center mb-4 ml-2 mr-2`}>
+    <div ref ={ref}
+    className={`flex ${isMainUser ? 'justify-end' : 'justify-start'} items-center mb-4 ml-2 mr-2`}>
       {/* Message Content */}
       <div className={`max-w-[70%] p-3 rounded-lg ${isMainUser ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-800'} ${isMainUser ? 'float-right' : 'float-left'}`}>
         <p>

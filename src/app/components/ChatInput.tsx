@@ -22,37 +22,42 @@ const ChatInput = () => {
   const { user } = UserAuth();
   const { data } = ChatAuth();
 
-  const handleSend = async () => {
-    if (image) {
-      const storageRef = ref(storage, myUUID);
+    const handleSend = async () => {
 
-      const uploadTask = uploadBytesResumable(storageRef, image);
+        if(image){
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // handle state changes if needed
-        },
-        (error) => {
-          console.error(error);
-        },
-        () => {
-          // handle successful completion if needed
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            await updateDoc(doc(db, "chats", data.chatId), {
-              messages: arrayUnion({
-                id: myUUID,
-                text,
-                senderId: user.uid,
-                date: Timestamp.now(),
-                image: downloadURL,
-              }),
-            });
-          });
-        }
-      );
-    } else {
-      await updateDoc(doc(db, "chats", data.chatId), {
+            let filename = "chats/"+myUUID;
+
+            const storageRef = ref(storage,filename);
+
+            const uploadTask = uploadBytesResumable(storageRef,image);
+        
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    // handle state changes if needed
+                },
+                (error) => {
+                    console.error(error);
+                },
+                () => {
+                    // handle successful completion if needed
+                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                        await updateDoc(doc(db, "chats", data.chatId), {
+                            messages: arrayUnion({
+                                id: myUUID,
+                                text,
+                                senderId: user.uid,
+                                date: Timestamp.now(),
+                                image: downloadURL,
+                            }),
+                        });
+                    });
+                }
+            );
+
+        }else{
+         await updateDoc(doc(db,"chats",data.chatId),{
         messages: arrayUnion({
           id: myUUID,
           text,
