@@ -2,6 +2,7 @@ import  {useContext, createContext, useState, useEffect} from 'react';
 import { signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, setDoc } from "firebase/firestore"; 
+import { ChatContextProvider } from './ChatContext';
 
 
 const AuthContext = createContext();
@@ -43,14 +44,17 @@ export const AuthContextProvider = ({children}) => {
 
         // Create an object containing the user details you want to save.
         const userDetails = {
-            displayName: user.displayName,
+            displayName: user.displayName.toLowerCase(),
             email: user.email,
-            text: "yoho"
+            text: "yoho",
+            uid: user.uid,
             // Add other user details as needed.
         };
 
         try {
             await setDoc(doc(db, "users", user.uid), userDetails);
+            console.log("Document written successfully.");
+            await setDoc(doc(db,"userChats", user.uid), {} );
             console.log("Document written successfully.");
           } catch (e) {
             console.error("Error adding document: ", e);
@@ -59,7 +63,9 @@ export const AuthContextProvider = ({children}) => {
 
     return (
         <AuthContext.Provider value={{user, googleSignIn, logOut}}>
+        <ChatContextProvider>
         {children}
+        </ChatContextProvider>
         </AuthContext.Provider>
     );
 }
