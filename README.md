@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+[![Deploy to Firebase Hosting on merge](https://github.com/CSIS-4495-001/the-final-one/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/CSIS-4495-001/the-final-one/actions/workflows/firebase-hosting-merge.yml)
+
 ## Getting Started
 
 First, run the development server:
