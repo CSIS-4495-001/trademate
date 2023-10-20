@@ -20,7 +20,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const {data} = ChatAuth();
 
   console.log("message => ",message);
-  if (message.senderId === user.uid) {
+  if (user && message.senderId === user.uid) {
     isMainUser = true;
   }else{
     isMainUser = false;

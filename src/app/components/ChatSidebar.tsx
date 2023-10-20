@@ -6,7 +6,6 @@ import ChatSearch from './ChatSearch';
 const ChatSidebar: React.FC = () => {
     return (
         <div>
-            <h1>SideBar</h1>
             <ChatNavbar></ChatNavbar>
             <ChatSearch></ChatSearch>
             <Chats></Chats>

@@ -26,8 +26,7 @@ const page = () => {
             </div>
             <div className="w-3/4">
                 {/* Main Chat Window */}
-                <div className="bg-white p-4 rounded-lg shadow">
-                    <h1 className="text-2xl mb-4">Chat page</h1>
+                <div className="bg-white p-4 rounded-lg shadow" style={{ height: '718px' }}>
                     <Chat />
                 </div>
             </div>
