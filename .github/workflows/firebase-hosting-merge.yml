@@ -37,9 +37,11 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.NEXT_PUBLIC_SLACKHOOK }}
           BUILD_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          GIT_USER: "${{ github.server_url }}/${{ github.actor }}"
+          GIT_REPO: "${{ github.server_url }}/${{ github.repository }}"
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "GitHub Actions build succeeded for the repository: ${{ github.repository }} by ${{ github.actor }}. See the build details [here]($BUILD_URL).${{env.BUILD_URL}}"
+            "text": "GitHub Actions build ✅ succeeded for the repository: [${{ github.repository }}](${{env.GIT_REPO}}) by [${{ github.actor }}](${{ env.GIT_USER }}). See the build details [here](${{env.BUILD_URL}})."
           }' $SLACK_WEBHOOK_URL
 
       - name: Notify Slack on Failure
@@ -47,7 +49,9 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.NEXT_PUBLIC_SLACKHOOK }}
           BUILD_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          GIT_USER: "${{ github.server_url }}/${{ github.actor }}"
+          GIT_REPO: "${{ github.server_url }}/${{ github.repository }}"
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "GitHub Actions build failed for the repository: ${{ github.repository }} by ${{ github.actor }}. See the build details [here]($BUILD_URL)."
+            "text": "GitHub Actions build 🚫 failed for the repository: [${{ github.repository }}](${{env.GIT_REPO}}) by [${{ github.actor }}](${{ env.GIT_USER }}). See the build details [here](${{env.BUILD_URL}})."
           }' $SLACK_WEBHOOK_URL
