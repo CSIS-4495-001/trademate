@@ -33,6 +33,7 @@ jobs:
           projectId: trademate-ccec1
 
   notify_on_slack:
+    needs: build_and_deploy
     runs-on: ubuntu-latest
     steps:
       - name: Notify on Success
