@@ -31,3 +31,21 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRADEMATE_CCEC1 }}"
           channelId: live
           projectId: trademate-ccec1
+
+      - name: Notify Slack on Success
+        if: success()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.NEXT_PUBLIC_SLACKHOOK }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "text": "GitHub Actions build succeeded for the repository: ${GITHUB_REPOSITORY} by ${GITHUB_ACTOR}"
+          }' $SLACK_WEBHOOK_URL
+
+      - name: Notify Slack on Failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.NEXT_PUBLIC_SLACKHOOK }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "text": "GitHub Actions build failed for the repository: ${GITHUB_REPOSITORY} by ${GITHUB_ACTOR}"
+          }' $SLACK_WEBHOOK_URL
