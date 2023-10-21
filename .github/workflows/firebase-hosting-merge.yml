@@ -32,7 +32,10 @@ jobs:
           channelId: live
           projectId: trademate-ccec1
 
-      - name: Notify Slack on Success
+  notify_on_slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify on Success
         if: success()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.NEXT_PUBLIC_SLACKHOOK }}
@@ -44,7 +47,7 @@ jobs:
             "text": "GitHub Actions build ✅ succeeded."
           }' $SLACK_WEBHOOK_URL
 
-      - name: Notify Slack on Failure
+      - name: Notify on Failure
         if: failure()
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.NEXT_PUBLIC_SLACKHOOK }}
