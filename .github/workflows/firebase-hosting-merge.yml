@@ -41,7 +41,7 @@ jobs:
           GIT_REPO: "${{ github.server_url }}/${{ github.repository }}"
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "GitHub Actions build ✅ succeeded for the repository: [${{ github.repository }}](${{env.GIT_REPO}}) by [${{ github.actor }}](${{ env.GIT_USER }}). See the build details [here](${{env.BUILD_URL}})."
+            "text": "GitHub Actions build ✅ succeeded."
           }' $SLACK_WEBHOOK_URL
 
       - name: Notify Slack on Failure
@@ -53,5 +53,5 @@ jobs:
           GIT_REPO: "${{ github.server_url }}/${{ github.repository }}"
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "GitHub Actions build 🚫 failed for the repository: [${{ github.repository }}](${{env.GIT_REPO}}) by [${{ github.actor }}](${{ env.GIT_USER }}). See the build details [here](${{env.BUILD_URL}})."
+            "text": "GitHub Actions build 🚫 failed."
           }' $SLACK_WEBHOOK_URL
