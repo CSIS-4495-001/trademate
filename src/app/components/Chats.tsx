@@ -73,6 +73,10 @@ const Chats = () => {
     }
   }, [user]);
 
+  const capitalizeFirstLetter = (str: string) => {
+    return str.replace(/\b\w/g, match => match.toUpperCase());
+  };
+
   const handleSelect = async (data: UserData) => {
     console.log("handleSelect => ", data);
     dispatch({ type: "CHANGE_USER", payload: data });
@@ -97,7 +101,7 @@ const Chats = () => {
                   )}
                 </div>
                 <div className="ml-2">
-                  <div>{chat.userInfo.displayName}</div>
+                  <div>{capitalizeFirstLetter(chat.userInfo.displayName)}</div>
                   <div className="text-sm text-gray-500">
                     {chat.lastMessage?.text}
                   </div>

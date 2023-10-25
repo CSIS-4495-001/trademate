@@ -3,10 +3,19 @@ import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 import { ChatAuth } from "../context/ChatContext";
 
+const capitalizeFirstLetter = (str: string) => {
+  return str.replace(/\b\w/g, match => match.toUpperCase());
+};
+
 const Chat = () => {
   const { data } = ChatAuth();
 
   console.log("data Latest => ", data);
+
+  const displayName = data.Nuser?.displayName || "";
+  const formattedDisplayName = displayName
+    ? capitalizeFirstLetter(displayName)
+    : "Chat Window";
 
   return (
     <div
@@ -15,7 +24,7 @@ const Chat = () => {
     >
       <div className="p-4 border-b">
         <span className="font-semibold text-lg">
-          {data.Nuser?.displayName || "Chat Window"}
+          {formattedDisplayName}
         </span>
       </div>
       <div className="flex-grow overflow-y-auto">
