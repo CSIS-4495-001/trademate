@@ -88,7 +88,7 @@ const Chats = () => {
         ? Object.entries(chats).map(([key, chat]: [string, any]) => (
             <div
               key={key}
-              className="flex items-center p-3 hover:bg-gray-200 cursor-pointer"
+              className="flex items-center p-3 hover:bg-gray-200 cursor-pointer shadow-md"
               onClick={() => handleSelect(chat.userInfo)}
             >
               <div className="flex items-center justify-center mt-4 hover:bg-gray-200 cursor-pointer">
