@@ -18,6 +18,7 @@ const ChatInput = () => {
   const myUUID = uuidv4();
   const [text, setText] = useState(" ");
   const [image, setImage] = useState<File | null>(null);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   const { user } = UserAuth();
   const { data } = ChatAuth();
@@ -65,6 +66,7 @@ const ChatInput = () => {
           date: Timestamp.now(),
         }),
       });
+
     }
 
     await updateDoc(doc(db, "userChats", user.uid), {
@@ -83,11 +85,23 @@ const ChatInput = () => {
 
     setText("");
     setImage(null);
+    setShowImageModal(false);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedImage = e.target.files?.[0] || null;
     setImage(selectedImage);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSend();
+    }
+  };
+
+  const handleCancel = () => {
+    setImage(null);
+    setShowImageModal(false);
   };
 
   return (
@@ -97,6 +111,7 @@ const ChatInput = () => {
         placeholder="Enter your message..."
         className="w-full border border-gray-300 p-2 mr-2 rounded focus:outline-none focus:border-blue-500"
         onChange={(e) => setText(e.target.value)}
+        onKeyDown={handleKeyDown}
         value={text}
       />
       <div className="flex items-center">
@@ -123,9 +138,43 @@ const ChatInput = () => {
           type="file"
           style={{ display: "none" }}
           id="file"
-          onChange={handleImageChange}
+          onChange={(e) => {
+            handleImageChange(e);
+            setShowImageModal(true);
+          }}
         />
       </div>
+
+      {image && (
+        <div className="mr-2">
+          <button
+            className="text-blue-500 underline cursor-pointer"
+            onClick={() => setShowImageModal(true)}
+          >
+          </button>
+        </div>
+      )}
+
+      {/* Modal */}
+      {showImageModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded">
+            <p className="justify-center">Image Selected</p>
+            <button
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-2"
+              onClick={handleSend}
+            >
+              Send
+            </button>
+            <button
+              className="bg-gray-300 text-black font-bold py-2 px-4 rounded"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       <div
         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded cursor-pointer"
@@ -135,6 +184,53 @@ const ChatInput = () => {
       </div>
     </div>
   );
+
+
+  // return (
+  //   <div className="bottom-0 left-0 w-full bg-white p-4 flex items-center">
+  //     <input
+  //       type="text"
+  //       placeholder="Enter your message..."
+  //       className="w-full border border-gray-300 p-2 mr-2 rounded focus:outline-none focus:border-blue-500"
+  //       onChange={(e) => setText(e.target.value)}
+  //       value={text}
+  //     />
+  //     <div className="flex items-center">
+  //       {/* Add Image Icon */}
+  //       <label htmlFor="file" className="cursor-pointer">
+  //         <svg
+  //           xmlns="http://www.w3.org/2000/svg"
+  //           className="h-6 w-6 text-blue-500 hover:text-blue-600"
+  //           fill="none"
+  //           viewBox="0 0 24 24"
+  //           stroke="currentColor"
+  //         >
+  //           <path
+  //             strokeLinecap="round"
+  //             strokeLinejoin="round"
+  //             strokeWidth="2"
+  //             d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+  //           />
+  //         </svg>
+  //       </label>
+
+  //       {/* Input for Image */}
+  //       <input
+  //         type="file"
+  //         style={{ display: "none" }}
+  //         id="file"
+  //         onChange={handleImageChange}
+  //       />
+  //     </div>
+
+  //     <div
+  //       className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded cursor-pointer"
+  //       onClick={handleSend}
+  //     >
+  //       Send
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default ChatInput;

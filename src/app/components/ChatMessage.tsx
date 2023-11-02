@@ -16,34 +16,62 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   let isMainUser = false;
 
-  const {user} = UserAuth();
-  const {data} = ChatAuth();
+  const { user } = UserAuth();
+  const { data } = ChatAuth();
 
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     ref.current?.scrollIntoView({
-      behavior: "smooth"
+      behavior: "smooth",
     });
   }, [message]);
 
-  console.log("message => ",message);
+  // Convert timestamp to Date object
+  const timestampDate = new Date((message.date as any).seconds * 1000);
+
   if (user && message.senderId === user.uid) {
     isMainUser = true;
-  }else{
+  } else {
     isMainUser = false;
   }
+
   return (
-    <div ref ={ref}
-    className={`flex ${isMainUser ? 'justify-end' : 'justify-start'} items-center mb-4 ml-2 mr-2`}>
-      {/* Message Content */}
-      <div className={`max-w-[70%] p-3 rounded-lg ${isMainUser ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-800'} ${isMainUser ? 'float-right' : 'float-left'}`}>
-        <p>
-          {message.text}
+    <div
+      ref={ref}
+      className={`flex ${
+        isMainUser ? "justify-end" : "justify-start"
+      } items-center mb-4 ml-2 mr-2`}
+    >
+      {isMainUser && (
+        // Timestamp in a new line for the main user
+        <p className="text-xs text-gray-500 ml-2 mr-2">
+          {timestampDate.toLocaleString()}
         </p>
-        {message.image && <img src={message?.image} alt=""></img>}
+      )}
+      {/* Message Content */}
+      <div
+        className={`max-w-[70%] p-3 rounded-lg ${
+          isMainUser
+            ? "bg-blue-500 text-white shadow-md"
+            : "bg-gray-100 text-gray-800 shadow-md"
+        } ${isMainUser ? "float-right" : "float-left"}`}
+      >
+        <p>{message.text}</p>
+        {message.image && (
+          <img
+            src={message?.image}
+            alt=""
+            className="mt-2 rounded-md w-full h-auto"
+          />
+        )}
       </div>
-      <p className="text-xs text-gray-500 ml-2"></p>
+      {!isMainUser && (
+        // Timestamp in a new line for the other user
+        <p className="text-xs text-gray-500 ml-2 mr-2">
+          {timestampDate.toLocaleString()}
+        </p>
+      )}
     </div>
   );
 };
