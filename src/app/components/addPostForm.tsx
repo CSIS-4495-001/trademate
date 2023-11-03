@@ -153,7 +153,7 @@ const AddPostForm = ({}) => {
         });
 
         // Create a draggable marker
-        const marker = createDraggableMarker(googleMap);
+        // const marker = createDraggableMarker(googleMap);
 
         // Add a marker to the map if you have a selected location
         if (selectedLocation.lat !== 0 && selectedLocation.lng !== 0) {
@@ -166,12 +166,12 @@ const AddPostForm = ({}) => {
     }
   };
 
-  const handleMapClick = (e: google.maps.MouseEvent) => {
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
-    setSelectedLocation({ lat, lng });
-    closeMapModal(); // Close the map modal after selecting a location
-  };
+  // const handleMapClick = (e: google.maps.MouseEvent) => {
+  //   const lat = e.latLng.lat();
+  //   const lng = e.latLng.lng();
+  //   setSelectedLocation({ lat, lng });
+  //   closeMapModal(); // Close the map modal after selecting a location
+  // };
   interface PlacePrediction {
     id: string;
     description: string;
@@ -219,23 +219,23 @@ const AddPostForm = ({}) => {
     }
   }, [location, isLocationSelected, isLocationInputFocused]);
 
-  const createDraggableMarker = (map: google.maps.Map) => {
-    const marker = new window.google.maps.Marker({
-      map,
-      position: selectedLocation,
-      draggable: true, // Make the marker draggable
-    });
+  // const createDraggableMarker = (map: google.maps.Map) => {
+  //   const marker = new window.google.maps.Marker({
+  //     map,
+  //     position: selectedLocation,
+  //     draggable: true, // Make the marker draggable
+  //   });
 
-    // Add an event listener to the marker to capture the new position on dragend
-    marker.addListener("dragend", (event) => {
-      const lat = event.latLng.lat();
-      const lng = event.latLng.lng();
-      setSelectedLocation({ lat, lng });
-      console.log({ lat, lng });
-    });
+  //   // Add an event listener to the marker to capture the new position on dragend
+  //   marker.addListener("dragend", (event) => {
+  //     const lat = event.latLng.lat();
+  //     const lng = event.latLng.lng();
+  //     setSelectedLocation({ lat, lng });
+  //     console.log({ lat, lng });
+  //   });
 
-    return marker;
-  };
+  //   return marker;
+  // };
 
   return (
     <div className="p-4">
