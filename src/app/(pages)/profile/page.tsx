@@ -5,6 +5,10 @@ import { UserAuth } from "@/app/context/AuthContext.js";
 import Spinner from "@/app/components/Spinner";
 import MultiStepForm from "@/app/components/MultiStepForm";
 import AddPostForm from "@/app/components/addPostForm";
+import Post from "@/app/components/Post";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/app/firebase";
+
 
 const profile = () => {
   const { user } = UserAuth();
@@ -16,6 +20,7 @@ const profile = () => {
     latitude: 0,
     longitude: 0,
   });
+
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -51,8 +56,10 @@ const profile = () => {
       // Geolocation is not supported by the browser
       console.error("Geolocation is not supported");
     }
+  
     // checkAuthentication();
   }, [user]);
+
 
   const handleOutsideClick = (e: React.MouseEvent) => {
     if (isModalOpen && e.target === e.currentTarget) {
@@ -103,7 +110,7 @@ const profile = () => {
         </li>
       </ul>
 
-      <div className="p-4 border-t mx-8 mt-2">
+      <div className="p-4 border-t mx-8 mt-2 z-1000">
         <button
           className="w-1/4 block mx-auto rounded-full bg-gray-900 hover:shadow-lg font-semibold text-white px-4 py-1"
           onClick={openModal}
@@ -112,7 +119,7 @@ const profile = () => {
         </button>
         {isModalOpen && (
           <div
-            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
             onClick={handleOutsideClick}
           >
             <div className="bg-white p-8 rounded-md">
@@ -120,19 +127,10 @@ const profile = () => {
             </div>
           </div>
         )}
-        <div>
-          {userLocation ? (
-            <div>
-              Latitude: {userLocation.latitude}, Longitude:{" "}
-              {userLocation.longitude}
-            </div>
-          ) : (
-            <div>Loading location...</div>
-          )}
-          {/* The rest of your component */}
-        </div>
       </div>
+      <Post />
     </div>
+    
   );
 };
 

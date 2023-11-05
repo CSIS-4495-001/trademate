@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { ChatAuth } from "../context/ChatContext";
 
+
 interface ChatMessageProps {
   message: {
     id: string;
