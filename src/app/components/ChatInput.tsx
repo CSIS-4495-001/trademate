@@ -105,11 +105,11 @@ const ChatInput = () => {
   };
 
   return (
-    <div className="bottom-0 left-0 w-full bg-white p-4 flex items-center">
+    <div className="bottom-0 left-0 w-full bg-gray-700 flex items-center ">
       <input
         type="text"
         placeholder="Enter your message..."
-        className="w-full border border-gray-300 p-2 mr-2 rounded focus:outline-none focus:border-blue-500"
+        className="w-full border border-gray-800 p-4 mr-2 rounded focus:outline-none focus:border-gray-500 text-white bg-gray-800"
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
         value={text}
@@ -119,7 +119,7 @@ const ChatInput = () => {
         <label htmlFor="file" className="cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 text-blue-500 hover:text-blue-600"
+            className="h-6 w-6 text-gray-800 hover:text-gray-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -156,81 +156,35 @@ const ChatInput = () => {
       )}
 
       {/* Modal */}
+      
       {showImageModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded">
-            <p className="justify-center">Image Selected</p>
-            <button
-              className="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-2"
-              onClick={handleSend}
-            >
-              Send
-            </button>
-            <button
-              className="bg-gray-300 text-black font-bold py-2 px-4 rounded"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-
-      <div
-        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded cursor-pointer"
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-gray-800 p-4 rounded text-white">
+      <p className="justify-center">Image Selected</p>
+      <button
+        className="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-2"
         onClick={handleSend}
       >
         Send
-      </div>
+      </button>
+      <button
+        className="bg-gray-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleCancel}
+      >
+        Cancel
+      </button>
     </div>
+  </div>
+)}
+
+<div
+  className="bg-gray-800 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded cursor-pointer"
+  onClick={handleSend}
+>
+  Send
+</div>
+</div>
   );
-
-
-  // return (
-  //   <div className="bottom-0 left-0 w-full bg-white p-4 flex items-center">
-  //     <input
-  //       type="text"
-  //       placeholder="Enter your message..."
-  //       className="w-full border border-gray-300 p-2 mr-2 rounded focus:outline-none focus:border-blue-500"
-  //       onChange={(e) => setText(e.target.value)}
-  //       value={text}
-  //     />
-  //     <div className="flex items-center">
-  //       {/* Add Image Icon */}
-  //       <label htmlFor="file" className="cursor-pointer">
-  //         <svg
-  //           xmlns="http://www.w3.org/2000/svg"
-  //           className="h-6 w-6 text-blue-500 hover:text-blue-600"
-  //           fill="none"
-  //           viewBox="0 0 24 24"
-  //           stroke="currentColor"
-  //         >
-  //           <path
-  //             strokeLinecap="round"
-  //             strokeLinejoin="round"
-  //             strokeWidth="2"
-  //             d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-  //           />
-  //         </svg>
-  //       </label>
-
-  //       {/* Input for Image */}
-  //       <input
-  //         type="file"
-  //         style={{ display: "none" }}
-  //         id="file"
-  //         onChange={handleImageChange}
-  //       />
-  //     </div>
-
-  //     <div
-  //       className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded cursor-pointer"
-  //       onClick={handleSend}
-  //     >
-  //       Send
-  //     </div>
-  //   </div>
-  // );
 };
 
 export default ChatInput;

@@ -17,15 +17,15 @@ const page = () => {
   });
 
   return (
-    <div className="flex p-4">
-      <div className="w-1/4 pr-4">
+    <div className="flex p-4 bg-gray-700 text-white">
+      <div className="w-1/4 pr-4 p-2">
         {/* Sidebar */}
         <ChatSidebar />
       </div>
       <div className="w-3/4">
         {/* Main Chat Window */}
         <div
-          className="bg-white p-4 rounded-lg shadow"
+          className="bg-gray-700 p-1 rounded-lg shadow text-white"
           style={{ height: "718px" }}
         >
           <Chat />

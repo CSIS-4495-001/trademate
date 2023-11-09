@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <main className="p-4">
-    <div className="container mx-auto">
+    <div className="container mx-auto ">
         <header className="py-8 text-center">
             <h1 className="text-4xl font-semibold text-gray-800 mb-4">Welcome to Your Barter Platform</h1>
             <p className="text-lg text-gray-600">Trade, Exchange, and Connect with Others</p>

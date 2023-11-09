@@ -39,8 +39,8 @@ const Navbar = () => {
   }, [user]);
 
   return (
-    <nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 mt-2">
-      <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+<nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 p-5 bg-gray-700">
+        <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
         <div className="flex items-center justify-between w-full md:w-auto">
           <div className="-mr-2 flex items-center md:hidden">
             <button
@@ -74,19 +74,19 @@ const Navbar = () => {
         <div className="hidden md:flex md:space-x-10">
           <Link
             href="/explore"
-            className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out"
+            className="font-medium text-white hover:text-gray-900 transition duration-150 ease-in-out"
           >
             Explore
           </Link>
           <Link
             href="/profile"
-            className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out"
+            className="font-medium text-white hover:text-gray-900 transition duration-150 ease-in-out"
           >
             Profile
           </Link>
           <Link
             href="/chat"
-            className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out"
+            className="font-medium text-white hover:text-gray-900 transition duration-150 ease-in-out"
           >
             Chat
           </Link>

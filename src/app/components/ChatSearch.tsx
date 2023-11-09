@@ -55,6 +55,7 @@ const ChatSearch = () => {
     }
   };
 
+// add this function to create link between two users
 const handleSelect = async () => {
     if(Nuser){
         const combineId = user.uid > Nuser.uid 
@@ -97,36 +98,21 @@ const handleSelect = async () => {
 };
 
 return (
-  <div className="p-4">
-    <div className=" items-center">
-      <input
-        type="text"
-        placeholder="Find a user"
-        onKeyDown={handleKey}
-        onChange={(e) => setUsername(e.target.value)}
-        value={username}
-        className="border border-gray-300 px-5 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-300"
-      />
-<button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue ml-1">
-  Report
-</button>  
-</div>
-    <div>
-      {err && <p className="text-red-500">User not found</p>}
+    <div className="text-center">
+      {err && <p className="text-red-500 text-lg font-bold">User not found</p>}
 
       {Nuser && (
-        <div className="flex items-center justify-center mt-4 hover:bg-gray-200 cursor-pointer rounded-md p-2" onClick={handleSelect}>
+        <div className="flex items-center justify-center mt-4 hover:bg-gray-700 cursor-pointer rounded-md p-2 transition-colors duration-200 text-white" onClick={handleSelect}>
           <div className="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-lg font-bold">
             <span>{Nuser.displayName[0].toUpperCase()}</span>
             {Nuser.displayName.includes(" ") && (
               <span>{Nuser.displayName.split(" ")[1][0].toUpperCase()}</span>
             )}
           </div>
-          <div className="ml-2">{Nuser.displayName}</div>
+          <div className="ml-2 text-lg font-semibold">{Nuser.displayName}</div>
         </div>
       )}
     </div>
-  </div>
 );
 };
 
