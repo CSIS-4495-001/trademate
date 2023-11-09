@@ -68,51 +68,23 @@ const profile = () => {
   };
 
   return (
-    <div className="max-w-full sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900">
-      <div className="rounded-t-lg h-32 overflow-hidden">
-        <img
-          className="object-cover object-top w-full"
-          src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ"
-          alt="Mountain"
-        />
-      </div>
-      <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
-        <img
-          className="object-cover object-center h-32"
-          src={user?.photoURL}
-          alt="Woman looking front"
-        />
-      </div>
-      <div className="text-center mt-2">
-        <h2 className="font-semibold">{user?.displayName}</h2>
-        <p className="text-gray-500">User</p>
-      </div>
-      <ul className="py-2 mt-1 text-gray-700 flex items-center justify-center space-x-4">
-        <li className="flex flex-col items-center justify-around">
-          <svg
-            className="w-4 fill-current text-blue-900"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-          </svg>
-          <div>2k</div>
-        </li>
-        <li className="flex flex-col items-center justify-around">
-          <svg
-            className="w-4 fill-current text-blue-900"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <path d="M9 12H1v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6h-8v2H9v-2zm0-1H0V5c0-1.1.9-2 2-2h4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1h4a2 2 0 0 1 2 2v6h-9V9H9v2zm3-8V2H8v1h4z" />
-          </svg>
-          <div>15</div>
-        </li>
-      </ul>
+    <div  className="max-w-full sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 shadow-xl text-gray-900 bg-gray-700">
 
-      <div className="p-4 border-t mx-8 mt-2 z-1000">
+    <div className="mx-auto w-48 h-48 relative -mt-16 border-4 border-gray-700 shadow-md rounded-full overflow-hidden bg-gray-700">
+      <img
+        className="object-cover object-center h-48 w-48"
+        src={user?.photoURL}
+        alt="User profile"
+      />
+    </div>
+    <div className="text-center mt-2">
+    <h2 className="text-white font-semibold" style={{ fontSize: '1.5em' }}>{user?.displayName}</h2>
+      <p className="text-gray-400 text-black">User</p>
+    </div>
+
+      <div className="p-4 border-t mx-8 mt-2 z-1000 shadow-lg">
         <button
-          className="w-1/4 block mx-auto rounded-full bg-gray-900 hover:shadow-lg font-semibold text-white px-4 py-1"
+          className="w-1/4 block mx-auto rounded-full bg-gray-900 hover:shadow-lg font-semibold text-white px-4 py-1 shadow-lg"
           onClick={openModal}
         >
           Create Post

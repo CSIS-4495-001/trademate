@@ -46,7 +46,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     >
       {isMainUser && (
         // Timestamp in a new line for the main user
-        <p className="text-xs text-gray-500 ml-2 mr-2">
+        <p className="text-xs text-gray-400 ml-2 mr-2">
           {timestampDate.toLocaleString()}
         </p>
       )}
@@ -54,8 +54,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       <div
         className={`max-w-[70%] p-3 rounded-lg ${
           isMainUser
-            ? "bg-blue-500 text-white shadow-md"
-            : "bg-gray-100 text-gray-800 shadow-md"
+            ? "bg-gray-800 text-white shadow-lg"
+            : "bg-gray-400 text-black shadow-lg"
         } ${isMainUser ? "float-right" : "float-left"}`}
       >
         <p>{message.text}</p>

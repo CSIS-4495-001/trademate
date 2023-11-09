@@ -70,44 +70,39 @@ const Post: React.FC<Props> = () => {
       return newImages;
     });
   };
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-black mx-auto max-w-screen-lg px-8 pt-5 pb-5">
       {userPosts.map((post, index) => (
         <div
           key={index}
-          className="bg-white rounded-md shadow-xl p-6 transition-transform transform hover:scale-105 border border-solid border-gray-200 backdrop-filter backdrop-blur-md"
-          >
-          <h1 className="text-2xl font-bold mb-2 text-gray-800">
-            {post.title}
-          </h1>
+          className="bg-gray-500 rounded-lg shadow-md p-6 transition-transform transform hover:scale-105 border border-solid border-gray-500"
+        >
+          <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
           <p>Description: </p>
-          <div className="bg-gray-200 rounded-md p-2 mb-4">
-            <p className="text-gray-800">{post.description}</p>
-          </div>
+          <div className="bg-gray-400 rounded-sm p-2 mb-4" style={{ height: '100px', overflowY: 'auto' }}>
+  <p>{post.description}</p>
+</div>
           {post.images && post.images.length > 0 && (
             <div className="relative">
               <img
-                className="w-full h-80 object-cover rounded-md"
+                className="w-full h-60 object-cover rounded-md"
                 src={post.images[currentImages[index]]}
                 alt={`Image ${currentImages[index]}`}
               />
               <button
                 onClick={() => prevImage(index)}
-                className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+                className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-300 text-black p-2 rounded-full"
               >
                 &lt;
               </button>
               <button
                 onClick={() => nextImage(index)}
-                className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
+                className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-300 text-black p-2 rounded-full"
               >
                 &gt;
               </button>
             </div>
           )}
-          <p className="mt-4 text-gray-600">{post.location}</p>
-          <p className="text-green-500 font-semibold">${post.price}</p>
         </div>
       ))}
     </div>
