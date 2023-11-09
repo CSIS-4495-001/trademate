@@ -7,32 +7,15 @@ import { RecenterControl } from "@/app/components/RecenterControl";
 import { darkMapStyle } from "./mapStyles";
 import { db, storage } from "@/app/firebase";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { Post } from "@/app/types/Post";
+import { getDistanceFromLatLonInKm } from "@/app/helpers/Geolocation";
 
-const postsInKm = 5;
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const postsInKm = 10;
 
 // Function to calculate distance between two locations
-function getDistanceFromLatLonInKm(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
-  const R = 6371; // Radius of the earth in km
-  const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // Distance in km
-}
-
-function deg2rad(deg: number): number {
-  return deg * (Math.PI / 180);
-}
 
 const page = () => {
   const { user } = UserAuth();
@@ -45,21 +28,12 @@ const page = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null); // Store the map instance
   const [isUserLocationAvailable, setIsUserLocationAvailable] = useState(false);
 
-  const [selectedPin, setSelectedPin] = useState<Post | null>(null);
-
   const mapContainerStyle = {
     width: "100%", // Set the width to 100% of the viewport
     height: "93vh", // Set the height to 100% of the viewport height
   };
 
-  interface Post {
-    user: string;
-    title: string;
-    coords: {
-      lat: number;
-      lng: number;
-    };
-  }
+  let toastId: any;
 
   const [posts, setPosts] = useState<Post[]>([]);
 
@@ -83,16 +57,16 @@ const page = () => {
 
       if (isUserLocationAvailable) {
         // Create a circle overlay with a 1000-meter radius
-        // const circle = new google.maps.Circle({
-        //   strokeColor: "#00a7bd",
-        //   strokeOpacity: 0.8,
-        //   strokeWeight: 2,
-        //   // fillColor: "#FF0000",
-        //   fillOpacity: 0.35,
-        //   map: map,
-        //   center: userLocation,
-        //   radius: 1000, // Radius in meters (1000 meters = 1 km)
-        // });
+        const circle = new google.maps.Circle({
+          strokeColor: "#00a7bd",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          // fillColor: "#FF0000",
+          fillOpacity: 0,
+          map: map,
+          center: userLocation,
+          radius: postsInKm * 1000,
+        });
 
         const blueDotIcon = {
           path: google.maps.SymbolPath.CIRCLE,
@@ -140,10 +114,29 @@ const page = () => {
 
           const infowindow = new google.maps.InfoWindow({
             content: `
-              <div>
-                <h2>${pin.title}</h2>
-                <p>Posted by: ${pin.user}</p>
-                <p>Coordinates: ${pin.coords.lat}, ${pin.coords.lng}</p>
+              <div class="max-w-xs bg-white p-4 rounded shadow-lg">
+                <h2 class="text-xl font-bold mb-2">${pin.title}</h2>
+                <p class="text-gray-600">Description: ${pin.description}</p>
+                <p class="text-gray-600">Posted at: ${new Date(
+                  pin.createdAt
+                )}</p>
+                <p class="text-gray-600">Coordinates: ${pin.coords.lat}, ${
+              pin.coords.lng
+            }</p>
+                <p class="text-gray-600">Location: ${pin.location}</p>
+                <p class="text-gray-600">Price: ${pin.price}</p>
+                <div class="overflow-hidden">
+                  <div class="flex" style="width: ${
+                    pin.images.length * 100
+                  }px;">
+                    ${pin.images
+                      .map(
+                        (image) =>
+                          `<img src="${image}" alt="Post image" class="w-16 h-16 object-cover mr-2"/>`
+                      )
+                      .join("")}
+                  </div>
+                </div>
               </div>
             `,
           });
@@ -159,6 +152,19 @@ const page = () => {
 
   useEffect(() => {
     if ("geolocation" in navigator) {
+      if (!isUserLocationAvailable && toastId == undefined) {
+        toastId = toast("Fetching user location...", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           // Get the user's latitude and longitude
@@ -166,6 +172,10 @@ const page = () => {
 
           // Store the location in the state variable
           setUserLocation({ lat: latitude, lng: longitude });
+
+          if (!isUserLocationAvailable) {
+            toast.dismiss(toastId);
+          }
 
           setIsUserLocationAvailable(true);
         },
@@ -175,39 +185,47 @@ const page = () => {
         }
       );
     } else {
+      setIsUserLocationAvailable(false);
       // Geolocation is not supported by the browser
       console.error("Geolocation is not supported");
     }
+
+    return () => {
+      setIsUserLocationAvailable(false);
+    };
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const db = getFirestore();
-      const postsRef = collection(db, "posts"); // replace 'posts' with your collection name
-      const querySnapshot = await getDocs(postsRef);
-      const nearbyPosts: Post[] = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const distanceInKm = getDistanceFromLatLonInKm(
-          userLocation.lat,
-          userLocation.lng,
-          data.coords.lat,
-          data.coords.lng
-        );
-        if (distanceInKm <= postsInKm) {
-          nearbyPosts.push(data as Post);
-        }
-      });
+    if (isUserLocationAvailable) {
+      const fetchData = async () => {
+        const db = getFirestore();
+        const postsRef = collection(db, "posts"); // replace 'posts' with your collection name
+        const querySnapshot = await getDocs(postsRef);
+        const nearbyPosts: Post[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const distanceInKm = getDistanceFromLatLonInKm(
+            userLocation.lat,
+            userLocation.lng,
+            data.coords.lat,
+            data.coords.lng
+          );
+          if (distanceInKm <= postsInKm) {
+            nearbyPosts.push(data as Post);
+          }
+        });
 
-      setPosts(nearbyPosts);
-    };
+        setPosts(nearbyPosts);
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, [userLocation]);
 
   return (
     <div className="flex flex-1 items-center justify-center">
       <div className="w-full">
+        <ToastContainer />
         <div className="">
           <div id="map" style={mapContainerStyle}></div>
         </div>

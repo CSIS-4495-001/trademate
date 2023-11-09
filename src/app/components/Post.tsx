@@ -2,16 +2,7 @@ import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-
-interface Props {
-  title?: string;
-  description?: string;
-  images?: string[];
-  upVotes?: number;
-  downVotes?: number;
-  location?: string;
-  price?: number;
-}
+import { Props } from "@/app/types/Props";
 
 const Post: React.FC<Props> = () => {
   const { user } = UserAuth();
