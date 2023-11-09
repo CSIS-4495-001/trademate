@@ -39,7 +39,7 @@ const Navbar = () => {
   }, [user]);
 
   return (
-<nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 p-5 bg-gray-700">
+<nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 p-5 bg-gray-700 pt-9 pb-9">
         <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
         <div className="flex items-center justify-between w-full md:w-auto">
           <div className="-mr-2 flex items-center md:hidden">

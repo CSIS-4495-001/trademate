@@ -79,9 +79,12 @@ const Post: React.FC<Props> = () => {
         >
           <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
           <p>Description: </p>
-          <div className="bg-gray-400 rounded-sm p-2 mb-4" style={{ height: '100px', overflowY: 'auto' }}>
-  <p>{post.description}</p>
-</div>
+          <div
+            className="bg-gray-400 rounded-sm p-2 mb-4"
+            style={{ height: "100px", overflowY: "auto" }}
+          >
+            <p>{post.description}</p>
+          </div>
           {post.images && post.images.length > 0 && (
             <div className="relative">
               <img
@@ -91,23 +94,40 @@ const Post: React.FC<Props> = () => {
               />
               {post.images.length > 1 && (
                 <div>
-              <button
-                onClick={() => prevImage(index)}
-                className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-300 text-black p-2 rounded-full"
-              >
-                &lt;
-              </button>
-              <button
-                onClick={() => nextImage(index)}
-                className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-300 text-black p-2 rounded-full"
-              >
-                &gt;
-              </button>
-                  </div>
+                  <button
+                    onClick={() => prevImage(index)}
+                    className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-300 text-black p-2 rounded-full"
+                  >
+                    &lt;
+                  </button>
+                  <button
+                    onClick={() => nextImage(index)}
+                    className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-300 text-black p-2 rounded-full"
+                  >
+                    &gt;
+                  </button>
+                </div>
               )}
-
             </div>
           )}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              paddingTop: "20px",
+            }}
+          >
+            <svg
+              height="15pt"
+              viewBox="0 0 512 512"
+              width="15pt"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#000000"
+            >
+              <path d="M256 0C156.125 0 76 80.125 76 180c0 39.625 13.875 67.5 38 112.25l141.875 219.75c2.125 3.25 6.125 5.5 10.125 5.5s8-2.25 10.125-5.5L398 292.25C422.125 247.5 436 219.625 436 180 436 80.125 355.875 0 256 0zm0 282.25c-31.875 0-57.5-25.625-57.5-57.5s25.625-57.5 57.5-57.5 57.5 25.625 57.5 57.5-25.625 57.5-57.5 57.5z" />
+            </svg>
+            <p style={{ marginLeft: "5px" }}>{post.location}</p>
+          </div>
         </div>
       ))}
     </div>
