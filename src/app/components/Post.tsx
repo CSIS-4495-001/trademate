@@ -89,6 +89,8 @@ const Post: React.FC<Props> = () => {
                 src={post.images[currentImages[index]]}
                 alt={`Image ${currentImages[index]}`}
               />
+              {post.images.length > 1 && (
+                <div>
               <button
                 onClick={() => prevImage(index)}
                 className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-300 text-black p-2 rounded-full"
@@ -101,6 +103,9 @@ const Post: React.FC<Props> = () => {
               >
                 &gt;
               </button>
+                  </div>
+              )}
+
             </div>
           )}
         </div>
