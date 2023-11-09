@@ -62,7 +62,7 @@ const Post: React.FC<Props> = () => {
     });
   };
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-black mx-auto max-w-screen-lg px-8 pt-5 pb-5">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-black mx-auto max-w-screen-lg px-8 pt-5 pb-3">
       {userPosts.map((post, index) => (
         <div
           key={index}
@@ -119,6 +119,7 @@ const Post: React.FC<Props> = () => {
             </svg>
             <p style={{ marginLeft: "5px" }}>{post.location}</p>
           </div>
+          <p className="text-green-500 font-semibold pt-4">${post.price}</p>
         </div>
       ))}
     </div>
