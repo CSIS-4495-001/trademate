@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-
     "@react-google-maps/api": "^2.19.2",
     "@types/googlemaps": "^3.43.3",
     "axios": "^1.5.1",
@@ -24,6 +23,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-slick": "^0.29.0",
+    "react-toastify": "^9.1.3",
     "slick-carousel": "^1.8.1",
     "uuid": "^9.0.1"
   },

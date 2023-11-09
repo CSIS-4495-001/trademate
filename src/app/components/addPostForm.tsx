@@ -26,7 +26,6 @@ const AddPostForm = ({}) => {
   const [isLocationInputFocused, setIsLocationInputFocused] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
-
   const inputRef = useRef(null);
 
   let autocompleteService: any;
@@ -35,7 +34,6 @@ const AddPostForm = ({}) => {
     // You can perform any necessary validation here
     // and then save the data and close the form
 
-    
     console.log(title, description, images, location, user, selectedLocation);
 
     const imageDownloadURLs = await Promise.all(
@@ -256,84 +254,90 @@ const AddPostForm = ({}) => {
   // };
 
   return (
-    <div className="p-4 z-10000">
+    <div className="z-10000">
       {showFormModal && (
         <>
-            <h2 className="text-lg font-semibold mb-4">Add a New Post</h2>
-            <div className="mb-4">
-              <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
-                Title
-              </label>
-              <input
-                type="text"
-                id="title"
-                className="w-full border rounded-lg p-2"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="description"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Description
-              </label>
-              <textarea
-                id="description"
-                className="w-full border rounded-lg p-2"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="price" className="block text-gray-700 font-medium mb-2">
-                Price
-              </label>
-              <input
-                type="number"
-                id="price"
-                className="w-full border rounded-lg p-2"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="images"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Images
-              </label>
-              <input
-                type="file"
-                id="images"
-                multiple
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="location"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Location
-              </label>
-              <input
-                type="text"
-                id="location"
-                className="w-full border rounded-lg p-2"
-                ref={inputRef}
-                value={location}
-                onChange={handleLocationChange}
-                onFocus={() => setIsLocationInputFocused(true)}
-              />
-              {/* <div
+          <h2 className="text-lg font-semibold mb-4">Add a New Post</h2>
+          <div className="mb-4">
+            <label
+              htmlFor="title"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              className="w-full border rounded-lg p-2"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="description"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              className="w-full border rounded-lg p-2"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="price"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Price
+            </label>
+            <input
+              type="number"
+              id="price"
+              className="w-full border rounded-lg p-2"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="images"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Images
+            </label>
+            <input
+              type="file"
+              id="images"
+              multiple
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="location"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Location
+            </label>
+            <input
+              type="text"
+              id="location"
+              className="w-full border rounded-lg p-2"
+              ref={inputRef}
+              value={location}
+              onChange={handleLocationChange}
+              onFocus={() => setIsLocationInputFocused(true)}
+            />
+            {/* <div
                   className="right-4 top-2 cursor-pointer"
                   onClick={openMapModal}
                 > */}
-              {/* <svg
+            {/* <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 text-blue-500"
                     fill="none"
@@ -347,58 +351,69 @@ const AddPostForm = ({}) => {
                       d="M19 19l-7-7m0 0l-7 7m7-7V2"
                     />
                   </svg> */}
-              {/* </div> */}
-        
-              {placePredictions.length > 0 && (
-                <ul className="bg-white border border-gray-300 rounded-lg absolute z-10 mt-2">
-                  {placePredictions.map((prediction) => (
-                    <li
-                      key={prediction.place_id} // Use place_id as the key
-                      onClick={() => handlePlaceSelect(prediction)}
-                      className="p-2 cursor-pointer hover:bg-gray-100"
-                    >
-                      {prediction.description}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="flex justify-end">
-              <button
-                className="bg-blue-500 text-white rounded-lg px-4 py-2"
-                onClick={handleSave}
-              >
-                Save
-              </button>
-            </div>
-            </>
+            {/* </div> */}
+
+            {placePredictions.length > 0 && (
+              <ul className="bg-white border border-gray-300 rounded-lg absolute z-10 mt-2">
+                {placePredictions.map((prediction) => (
+                  <li
+                    key={prediction.place_id} // Use place_id as the key
+                    onClick={() => handlePlaceSelect(prediction)}
+                    className="p-2 cursor-pointer hover:bg-gray-100"
+                  >
+                    {prediction.description}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="flex justify-end">
+            <button
+              className="bg-blue-500 text-white rounded-lg px-4 py-2"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+          </div>
+        </>
       )}
 
-    {/* Map modal */}
-    {showMapModal && (
-      <div className="fixed top-1/4 left-1/4 w-1/2 h-1/2 bg-white z-50">
-        <div id="googleMap" className="w-full h-full"></div>
-        <button
-          onClick={closeMapModal}
-          className="bg-blue-500 text-white rounded-lg px-4 py-2 absolute top-4 right-4"
-        >
-          Close
-        </button>
-      </div>
-    )}
+      {/* Map modal */}
+      {showMapModal && (
+        <div className="fixed top-1/4 left-1/4 w-1/2 h-1/2 bg-white z-50">
+          <div id="googleMap" className="w-full h-full"></div>
+          <button
+            onClick={closeMapModal}
+            className="bg-blue-500 text-white rounded-lg px-4 py-2 absolute top-4 right-4"
+          >
+            Close
+          </button>
+        </div>
+      )}
 
-{showNotification && (
-  <div className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
-<div className="flex">
-  <div className="py-1"><svg className="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
-  <div>
-    <p className="font-bold">Account Information</p>
-    <p className="text-sm">Post created successfully.</p>
-  </div>
-</div>
-</div>
-)}
-  </div>
+      {showNotification && (
+        <div
+          className="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+          role="alert"
+        >
+          <div className="flex">
+            <div className="py-1">
+              <svg
+                className="fill-current h-6 w-6 text-teal-500 mr-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-bold">Account Information</p>
+              <p className="text-sm">Post created successfully.</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
