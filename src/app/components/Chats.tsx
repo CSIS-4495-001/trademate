@@ -88,10 +88,10 @@ const Chats = () => {
         ? Object.entries(chats).map(([key, chat]: [string, any]) => (
             <div
               key={key}
-              className="flex items-center p-3 hover:bg-gray-200 cursor-pointer shadow-md"
+              className="flex items-center p-3 hover:bg-gray-700 cursor-pointer shadow-md text-white bg-gray-800"
               onClick={() => handleSelect(chat.userInfo)}
             >
-              <div className="flex items-center justify-center mt-4 hover:bg-gray-200 cursor-pointer">
+              <div className="flex items-center justify-center mt-4 hover:bg-gray-700 cursor-pointer">
                 <div className="bg-blue-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-lg font-bold">
                   <span>{chat.userInfo.displayName[0].toUpperCase()}</span>
                   {chat.userInfo.displayName.includes(" ") && (
@@ -109,7 +109,7 @@ const Chats = () => {
               </div>
             </div>
           ))
-        : null}
+        : "Loading..."}
     </>
   );
 };
