@@ -66,7 +66,7 @@ const Post: React.FC<Props> = () => {
       {userPosts.map((post, index) => (
         <div
           key={index}
-          className="bg-gray-500 rounded-lg shadow-md p-6 transition-transform transform hover:scale-105 border border-solid border-gray-500"
+          className="bg-gray-500 shadow-md p-6 transition-transform transform hover:scale-105 border border-solid border-gray-500"
         >
           <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
           <p>Description: </p>
@@ -119,7 +119,14 @@ const Post: React.FC<Props> = () => {
             </svg>
             <p style={{ marginLeft: "5px" }}>{post.location}</p>
           </div>
-          <p className="text-green-500 font-semibold pt-4">${post.price}</p>
+          <p
+            className="text-green-500 font-semibold pt-4"
+            style={{
+              fontSize: "1.2rem",
+            }}
+          >
+            ${post.price}
+          </p>
         </div>
       ))}
     </div>

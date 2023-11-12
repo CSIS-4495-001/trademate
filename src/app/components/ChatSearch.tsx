@@ -21,7 +21,7 @@ const ChatSearch = () => {
 
   const handleSearch = async () => {
     console.log("searching for Nuser with username: ", username.trim());
-    console.log("current Nuser: ", user);
+    console.log("current uuser: ", user);
     const q = query(
       collection(db, "users"),
       where("displayName", "==", username.trim())

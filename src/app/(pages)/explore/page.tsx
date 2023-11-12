@@ -1,19 +1,30 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-// import { useRouter } from "next/router";
+import React, { use, useEffect, useState } from "react";
 import { UserAuth } from "../../context/AuthContext.js";
 import { RecenterControl } from "@/app/components/RecenterControl";
 import { darkMapStyle } from "./mapStyles";
 import { db, storage } from "@/app/firebase";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { Post } from "@/app/types/Post";
 import { getDistanceFromLatLonInKm } from "@/app/helpers/Geolocation";
 
+import { collection, query, where, getDocs, getDoc, doc, setDoc, serverTimestamp,updateDoc } from "firebase/firestore";
+
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { get } from "http";
+import { Router } from "next/router.js";
 
 const postsInKm = 10;
+
+interface UserData {
+  displayName: string;
+  email: string;
+  text: string;
+  uid: string;
+}
 
 // Function to calculate distance between two locations
 
@@ -23,7 +34,8 @@ const page = () => {
     lat: 49.273282,
     lng: -123.104274,
   });
-  // const router = useRouter();
+
+  const [Nuser, setUser] = React.useState<UserData | null>(null);
 
   const [map, setMap] = useState<google.maps.Map | null>(null); // Store the map instance
   const [isUserLocationAvailable, setIsUserLocationAvailable] = useState(false);
@@ -36,6 +48,101 @@ const page = () => {
   let toastId: any;
 
   const [posts, setPosts] = useState<Post[]>([]);
+
+
+  const getSelecedUser = async (selectedUid: string) => {
+
+    console.log("selectedUid => ",selectedUid);
+    const q = query(
+      collection(db, "users"),
+      where("uid", "==", selectedUid)
+    );
+    
+    try {
+      const querySnapshot = await getDocs(q);
+      console.log(querySnapshot);
+
+      if (querySnapshot.empty) {
+        setUser(null);
+      } else {
+        querySnapshot.forEach((doc) => {
+          setUser(doc.data() as UserData);
+          console.log(doc.id, " DOCC => ", doc.data());
+        });
+        console.log("Nuser => ",Nuser);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    console.log("Nuser => ", Nuser);
+    if (Nuser) {
+      createChat();
+    }
+  }, [Nuser]);
+
+  const createChat = async () => {
+
+    console.log("searching for Nuser with username: ", Nuser?.displayName.trim());
+
+    if (Nuser) {
+      const combineId = user.uid > Nuser.uid ? user.uid + Nuser.uid : Nuser.uid + user.uid;
+
+      console.log("combineId => ", combineId);
+
+      const res = await getDoc(doc(db, "chats", combineId));
+
+      if (!res.exists()) {
+        await setDoc(doc(db, "chats", combineId), { messages: [] });
+
+        await updateDoc(doc(db, "userChats", user.uid), {
+          [combineId + ".userInfo"]: {
+            uid: Nuser.uid,
+            displayName: Nuser.displayName,
+          },
+          [combineId + ".date"]: serverTimestamp(),
+        });
+
+        await updateDoc(doc(db, "userChats", Nuser.uid), {
+          [combineId + ".userInfo"]: {
+            uid: user.uid,
+            displayName: user.displayName,
+          },
+          [combineId + ".date"]: serverTimestamp(),
+        });
+        toast.success("Connection Created, Go to chat page to talk", {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        
+      } else {
+        toast.error("Chat already exists", {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      }
+    }
+    setUser(null); // Reset the user state after handling the selection
+  }
+
+  const handleSelect = async (selectedUid:string) => {
+    await getSelecedUser(selectedUid);
+  };
+
 
   useEffect(() => {
     const mapElement = document.getElementById("map");
@@ -100,7 +207,7 @@ const page = () => {
       let openInfoWindow: google.maps.InfoWindow | null = null;
 
       // Add markers based on the 'pins' array
-      posts.forEach((pin) => {
+      posts.forEach((pin, index) => {
         const marker = new google.maps.Marker({
           position: { lat: pin.coords.lat, lng: pin.coords.lng },
           map: map,
@@ -114,37 +221,41 @@ const page = () => {
 
           const infowindow = new google.maps.InfoWindow({
             content: `
-              <div class="max-w-xs bg-white p-4 rounded shadow-lg">
-                <h2 class="text-xl font-bold mb-2">${pin.title}</h2>
-                <p class="text-gray-600">Description: ${pin.description}</p>
-                <p class="text-gray-600">Posted at: ${new Date(
-                  pin.createdAt
-                )}</p>
-                <p class="text-gray-600">Coordinates: ${pin.coords.lat}, ${
-              pin.coords.lng
-            }</p>
-                <p class="text-gray-600">Location: ${pin.location}</p>
-                <p class="text-gray-600">Price: ${pin.price}</p>
-                <div class="overflow-hidden">
-                  <div class="flex" style="width: ${
-                    pin.images.length * 100
-                  }px;">
-                    ${pin.images
-                      .map(
-                        (image) =>
-                          `<img src="${image}" alt="Post image" class="w-16 h-16 object-cover mr-2"/>`
-                      )
-                      .join("")}
-                  </div>
-                </div>
-              </div>
+            <div style="max-width: 300px; margin: 0 auto; background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px;">${pin.title}</h2>
+            <p style="color: #555; margin-bottom: 8px;">Description: ${pin.description}</p>
+            <p style="color: #555; margin-bottom: 8px;">Posted at: ${new Date(pin.createdAt)}</p>
+            <p style="color: #555; margin-bottom: 8px;">Coordinates: ${pin.coords.lat}, ${pin.coords.lng}</p>
+            <p style="color: #555; margin-bottom: 8px;">Location: ${pin.location}</p>
+            <p style="color: #555; margin-bottom: 8px;">Price: ${pin.price}</p>
+            
+            <div style="display: flex; gap: 8px; overflow: hidden; margin-bottom: 8px;">
+              ${pin.images.map(image => `<img src="${image}" alt="Post image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"/>`).join("")}
+            </div>
+          
+            <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">Select</button>
+          </div>
             `,
+
           });
 
           infowindow.open(map, marker);
 
+          google.maps.event.addListenerOnce(infowindow, 'domready', () => {
+            const selectButton = document.getElementById(`selectButton${index}`);
+            if (selectButton) {
+              selectButton.addEventListener("click", () => {
+                console.log("selectButton clicked");
+                const selectedUid = selectButton?.getAttribute("value");
+                console.log("selectedUid => ",selectedUid);
+                handleSelect(selectedUid!);
+                infowindow.close(); // Optionally close the InfoWindow after button click
+              });
+            }});
+
           // Set the new InfoWindow as the currently open one
           openInfoWindow = infowindow;
+
         });
       });
     }
@@ -216,6 +327,7 @@ const page = () => {
         });
 
         setPosts(nearbyPosts);
+        console.log("nearbyPosts => ",nearbyPosts);
       };
 
       fetchData();
