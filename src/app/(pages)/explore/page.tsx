@@ -9,15 +9,24 @@ import { getFirestore } from "firebase/firestore";
 import { Post } from "@/app/types/Post";
 import { getDistanceFromLatLonInKm } from "@/app/helpers/Geolocation";
 
-import { collection, query, where, getDocs, getDoc, doc, setDoc, serverTimestamp,updateDoc } from "firebase/firestore";
-
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  doc,
+  setDoc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { get } from "http";
 import { Router } from "next/router.js";
-
-const postsInKm = 10;
+import { FilterControl } from "@/app/components/FilterControl";
+import { set } from "firebase/database";
 
 interface UserData {
   displayName: string;
@@ -35,6 +44,8 @@ const page = () => {
     lng: -123.104274,
   });
 
+  const [postsInKm, setPostsInKm] = useState(1);
+
   const [Nuser, setUser] = React.useState<UserData | null>(null);
 
   const [map, setMap] = useState<google.maps.Map | null>(null); // Store the map instance
@@ -49,15 +60,10 @@ const page = () => {
 
   const [posts, setPosts] = useState<Post[]>([]);
 
-
   const getSelecedUser = async (selectedUid: string) => {
+    console.log("selectedUid => ", selectedUid);
+    const q = query(collection(db, "users"), where("uid", "==", selectedUid));
 
-    console.log("selectedUid => ",selectedUid);
-    const q = query(
-      collection(db, "users"),
-      where("uid", "==", selectedUid)
-    );
-    
     try {
       const querySnapshot = await getDocs(q);
       console.log(querySnapshot);
@@ -69,12 +75,12 @@ const page = () => {
           setUser(doc.data() as UserData);
           console.log(doc.id, " DOCC => ", doc.data());
         });
-        console.log("Nuser => ",Nuser);
+        console.log("Nuser => ", Nuser);
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     console.log("Nuser => ", Nuser);
@@ -84,11 +90,14 @@ const page = () => {
   }, [Nuser]);
 
   const createChat = async () => {
-
-    console.log("searching for Nuser with username: ", Nuser?.displayName.trim());
+    console.log(
+      "searching for Nuser with username: ",
+      Nuser?.displayName.trim()
+    );
 
     if (Nuser) {
-      const combineId = user.uid > Nuser.uid ? user.uid + Nuser.uid : Nuser.uid + user.uid;
+      const combineId =
+        user.uid > Nuser.uid ? user.uid + Nuser.uid : Nuser.uid + user.uid;
 
       console.log("combineId => ", combineId);
 
@@ -122,7 +131,6 @@ const page = () => {
           progress: undefined,
           theme: "dark",
         });
-        
       } else {
         toast.error("Chat already exists", {
           position: "bottom-left",
@@ -137,12 +145,11 @@ const page = () => {
       }
     }
     setUser(null); // Reset the user state after handling the selection
-  }
-
-  const handleSelect = async (selectedUid:string) => {
-    await getSelecedUser(selectedUid);
   };
 
+  const handleSelect = async (selectedUid: string) => {
+    await getSelecedUser(selectedUid);
+  };
 
   useEffect(() => {
     const mapElement = document.getElementById("map");
@@ -164,17 +171,6 @@ const page = () => {
 
       if (isUserLocationAvailable) {
         // Create a circle overlay with a 1000-meter radius
-        const circle = new google.maps.Circle({
-          strokeColor: "#00a7bd",
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          // fillColor: "#FF0000",
-          fillOpacity: 0,
-          map: map,
-          center: userLocation,
-          radius: postsInKm * 1000,
-        });
-
         const blueDotIcon = {
           path: google.maps.SymbolPath.CIRCLE,
           fillColor: "#269bf3",
@@ -204,6 +200,39 @@ const page = () => {
         recenterControlDiv
       );
 
+      let circle = new google.maps.Circle({
+        strokeColor: "#00FF00",
+        strokeOpacity: 0.3,
+        strokeWeight: 2,
+        fillColor: "#00FF00",
+        fillOpacity: 0.2,
+        map: map,
+        center: userLocation,
+        radius: postsInKm * 1000,
+        // Add 3D effect with a drop shadow
+        zIndex: 1, // Ensure the circle is above other elements
+        // Add a drop shadow for the 3D effect
+      });
+      // Create a custom control for filtering
+      const filterControlDiv = document.createElement("div");
+
+      const setRadius = (radius: number) => {
+        // Update the radius of your circle here
+        setPostsInKm(radius);
+        circle.setRadius(radius * 1000);
+        radius = radius;
+      };
+      const filterControl = new FilterControl(
+        filterControlDiv,
+        map,
+        setRadius,
+        postsInKm
+      );
+      // Set the position for the filter control
+      map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+        filterControlDiv
+      );
+
       let openInfoWindow: google.maps.InfoWindow | null = null;
 
       // Add markers based on the 'pins' array
@@ -222,40 +251,59 @@ const page = () => {
           const infowindow = new google.maps.InfoWindow({
             content: `
             <div style="max-width: 300px; margin: 0 auto; background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px;">${pin.title}</h2>
-            <p style="color: #555; margin-bottom: 8px;">Description: ${pin.description}</p>
-            <p style="color: #555; margin-bottom: 8px;">Posted at: ${new Date(pin.createdAt)}</p>
-            <p style="color: #555; margin-bottom: 8px;">Coordinates: ${pin.coords.lat}, ${pin.coords.lng}</p>
-            <p style="color: #555; margin-bottom: 8px;">Location: ${pin.location}</p>
+            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px;">${
+              pin.title
+            }</h2>
+            <p style="color: #555; margin-bottom: 8px;">Description: ${
+              pin.description
+            }</p>
+            <p style="color: #555; margin-bottom: 8px;">Posted at: ${new Date(
+              pin.createdAt
+            )}</p>
+            <p style="color: #555; margin-bottom: 8px;">Coordinates: ${
+              pin.coords.lat
+            }, ${pin.coords.lng}</p>
+            <p style="color: #555; margin-bottom: 8px;">Location: ${
+              pin.location
+            }</p>
             <p style="color: #555; margin-bottom: 8px;">Price: ${pin.price}</p>
             
             <div style="display: flex; gap: 8px; overflow: hidden; margin-bottom: 8px;">
-              ${pin.images.map(image => `<img src="${image}" alt="Post image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"/>`).join("")}
+              ${pin.images
+                .map(
+                  (image) =>
+                    `<img src="${image}" alt="Post image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"/>`
+                )
+                .join("")}
             </div>
           
-            <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">Select</button>
+            <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;" id="selectButton${index}" value="${pin.user}">Select</button>
           </div>
             `,
-
           });
 
-          infowindow.open(map, marker);
-
-          google.maps.event.addListenerOnce(infowindow, 'domready', () => {
-            const selectButton = document.getElementById(`selectButton${index}`);
+          google.maps.event.addListenerOnce(infowindow, "domready", () => {
+            const selectButton = document.getElementById(
+              `selectButton${index}`
+            );
             if (selectButton) {
               selectButton.addEventListener("click", () => {
                 console.log("selectButton clicked");
                 const selectedUid = selectButton?.getAttribute("value");
-                console.log("selectedUid => ",selectedUid);
+                console.log("selectedUid => ", selectedUid);
                 handleSelect(selectedUid!);
                 infowindow.close(); // Optionally close the InfoWindow after button click
               });
-            }});
+            }
+          });
+
+          infowindow.open(map, marker);
+
+
 
           // Set the new InfoWindow as the currently open one
           openInfoWindow = infowindow;
-
+          
         });
       });
     }
@@ -327,12 +375,12 @@ const page = () => {
         });
 
         setPosts(nearbyPosts);
-        console.log("nearbyPosts => ",nearbyPosts);
+        console.log("nearbyPosts => ", nearbyPosts);
       };
 
       fetchData();
     }
-  }, [userLocation]);
+  }, [userLocation, postsInKm]);
 
   return (
     <div className="flex flex-1 items-center justify-center">
