@@ -113,86 +113,10 @@ const AddPostForm = ({}) => {
     setIsLocationSelected(false);
   };
 
-  const openMapModal = () => {
-    setShowMapModal(true);
-    loadGoogleMapsScript();
-  };
 
   const closeMapModal = () => {
     setShowMapModal(false);
   };
-
-  const closeFormModal = () => {
-    setShowFormModal(false);
-  };
-
-  const loadGoogleMapsScript = () => {
-    // Check if the Google Maps API script is already loaded
-    const scriptElement = document.querySelector(
-      'script[src*="maps.googleapis.com/maps/api/js"]'
-    );
-
-    if (scriptElement) {
-      // If the script element already exists, remove it
-      document.head.removeChild(scriptElement);
-    }
-
-    // Create a new script element and add it to the document's <head>
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_googlemapsapi}&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.onload = initializeMap;
-
-    document.head.appendChild(script);
-  };
-
-  const initializeMap = () => {
-    console.log("init map");
-    if (window.google && window.google.maps) {
-      // Google Maps API is available; you can safely use it
-      autocompleteService = new window.google.maps.places.AutocompleteService();
-
-      // Continue with the rest of your map initialization
-      console.log("init map 2");
-      const mapElement = document.getElementById("googleMap");
-      if (mapElement) {
-        const mapCenter =
-          selectedLocation.lat !== 0 && selectedLocation.lng !== 0
-            ? selectedLocation
-            : { lat: 0, lng: 0 };
-
-        // Initialize the map and add markers if needed
-        const googleMap = new window.google.maps.Map(mapElement, {
-          center: mapCenter, // Initial center coordinates
-          zoom: 15, // Initial zoom level
-        });
-
-        // Create a draggable marker
-        // const marker = createDraggableMarker(googleMap);
-
-        // Add a marker to the map if you have a selected location
-        if (selectedLocation.lat !== 0 && selectedLocation.lng !== 0) {
-          new window.google.maps.Marker({
-            position: selectedLocation,
-            map: googleMap,
-          });
-        }
-      }
-    }
-  };
-
-  // const handleMapClick = (e: google.maps.MouseEvent) => {
-  //   const lat = e.latLng.lat();
-  //   const lng = e.latLng.lng();
-  //   setSelectedLocation({ lat, lng });
-  //   closeMapModal(); // Close the map modal after selecting a location
-  // };
-  interface PlacePrediction {
-    id: string;
-    description: string;
-    // Add more properties if needed based on the Google Places API response
-  }
 
   interface AutocompletePrediction {
     description: string;
@@ -333,25 +257,6 @@ const AddPostForm = ({}) => {
               onChange={handleLocationChange}
               onFocus={() => setIsLocationInputFocused(true)}
             />
-            {/* <div
-                  className="right-4 top-2 cursor-pointer"
-                  onClick={openMapModal}
-                > */}
-            {/* <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 text-blue-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 19l-7-7m0 0l-7 7m7-7V2"
-                    />
-                  </svg> */}
-            {/* </div> */}
 
             {placePredictions.length > 0 && (
               <ul className="bg-white border border-gray-300 rounded-lg absolute z-10 mt-2">
