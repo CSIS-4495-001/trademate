@@ -103,8 +103,35 @@ const page = () => {
 
       const res = await getDoc(doc(db, "chats", combineId));
 
+      const checkUserChat = await getDoc(doc(db, "userChats", user.uid));
+      const checkNuserChat = await getDoc(doc(db, "userChats", Nuser.uid));
+
       if (!res.exists()) {
         await setDoc(doc(db, "chats", combineId), { messages: [] });
+
+        if(!checkUserChat.exists()){
+          await setDoc(doc(db, "userChats", user.uid), { 
+            [combineId]: {
+              userInfo: {
+                uid: Nuser.uid,
+                displayName: Nuser.displayName,
+              },
+              date: serverTimestamp(),
+            },
+          });
+        }
+
+        if(!checkNuserChat.exists()){
+          await setDoc(doc(db, "userChats", Nuser.uid), { 
+            [combineId]: {
+              userInfo: {
+                uid: user.uid,
+                displayName: user.displayName,
+              },
+              date: serverTimestamp(),
+            },
+          });
+        }
 
         await updateDoc(doc(db, "userChats", user.uid), {
           [combineId + ".userInfo"]: {
@@ -121,6 +148,7 @@ const page = () => {
           },
           [combineId + ".date"]: serverTimestamp(),
         });
+        
         toast.success("Connection Created, Go to chat page to talk", {
           position: "bottom-left",
           autoClose: 3000,
@@ -131,6 +159,7 @@ const page = () => {
           progress: undefined,
           theme: "dark",
         });
+
       } else {
         toast.error("Chat already exists", {
           position: "bottom-left",
