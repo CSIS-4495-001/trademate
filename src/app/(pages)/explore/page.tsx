@@ -363,6 +363,7 @@ const page = () => {
         const nearbyPosts: Post[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
+          
           const distanceInKm = getDistanceFromLatLonInKm(
             userLocation.lat,
             userLocation.lng,
@@ -370,7 +371,9 @@ const page = () => {
             data.coords.lng
           );
           if (distanceInKm <= postsInKm) {
-            nearbyPosts.push(data as Post);
+            if(data.user != user.uid){
+              nearbyPosts.push(data as Post);
+            }
           }
         });
 
