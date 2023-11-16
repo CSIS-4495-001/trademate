@@ -53,7 +53,7 @@ const page = () => {
 
   const mapContainerStyle = {
     width: "100%", // Set the width to 100% of the viewport
-    height: "93vh", // Set the height to 100% of the viewport height
+    height: "91vh", // Set the height to 100% of the viewport height
   };
 
   let toastId: any;
