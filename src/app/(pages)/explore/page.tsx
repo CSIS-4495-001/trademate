@@ -27,6 +27,7 @@ import { get } from "http";
 import { Router } from "next/router.js";
 import { FilterControl } from "@/app/components/FilterControl";
 import { set } from "firebase/database";
+import { PriceControl } from "@/app/components/PriceControl";
 
 interface UserData {
   displayName: string;
@@ -45,6 +46,8 @@ const page = () => {
   });
 
   const [postsInKm, setPostsInKm] = useState(1);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(100); // Set an initial maximum price
 
   const [Nuser, setUser] = React.useState<UserData | null>(null);
 
@@ -109,8 +112,8 @@ const page = () => {
       if (!res.exists()) {
         await setDoc(doc(db, "chats", combineId), { messages: [] });
 
-        if(!checkUserChat.exists()){
-          await setDoc(doc(db, "userChats", user.uid), { 
+        if (!checkUserChat.exists()) {
+          await setDoc(doc(db, "userChats", user.uid), {
             [combineId]: {
               userInfo: {
                 uid: Nuser.uid,
@@ -121,8 +124,8 @@ const page = () => {
           });
         }
 
-        if(!checkNuserChat.exists()){
-          await setDoc(doc(db, "userChats", Nuser.uid), { 
+        if (!checkNuserChat.exists()) {
+          await setDoc(doc(db, "userChats", Nuser.uid), {
             [combineId]: {
               userInfo: {
                 uid: user.uid,
@@ -148,7 +151,7 @@ const page = () => {
           },
           [combineId + ".date"]: serverTimestamp(),
         });
-        
+
         toast.success("Connection Created, Go to chat page to talk", {
           position: "bottom-left",
           autoClose: 3000,
@@ -159,7 +162,6 @@ const page = () => {
           progress: undefined,
           theme: "dark",
         });
-
       } else {
         toast.error("Chat already exists", {
           position: "bottom-left",
@@ -216,7 +218,6 @@ const page = () => {
         });
       }
 
-      // Create a custom control for recentering
       const recenterControlDiv = document.createElement("div");
       const recenterControl = new RecenterControl(
         recenterControlDiv,
@@ -224,7 +225,6 @@ const page = () => {
         userLocation
       );
 
-      // Set the position for the recenter control above the Street View control
       map.controls[google.maps.ControlPosition.TOP_CENTER].push(
         recenterControlDiv
       );
@@ -238,29 +238,66 @@ const page = () => {
         map: map,
         center: userLocation,
         radius: postsInKm * 1000,
-        // Add 3D effect with a drop shadow
         zIndex: 1, // Ensure the circle is above other elements
-        // Add a drop shadow for the 3D effect
       });
-      // Create a custom control for filtering
+
       const filterControlDiv = document.createElement("div");
+      const priceControlDiv = document.createElement("div");
 
       const setRadius = (radius: number) => {
-        // Update the radius of your circle here
         setPostsInKm(radius);
         circle.setRadius(radius * 1000);
         radius = radius;
       };
+
+      const handlePriceChange = (min: number, max: number) => {
+        setMinPrice(min);
+        setMaxPrice(max);
+      };
+
       const filterControl = new FilterControl(
         filterControlDiv,
         map,
         setRadius,
         postsInKm
       );
-      // Set the position for the filter control
+
+      const priceControl = new PriceControl(
+        priceControlDiv,
+        handlePriceChange,
+        minPrice,
+        maxPrice
+      );
+
+      // Set the position for the filter and price controls
       map.controls[google.maps.ControlPosition.TOP_CENTER].push(
         filterControlDiv
       );
+
+      priceControlDiv.style.display = "none";
+
+      map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+        priceControlDiv
+      );
+
+      const moreButtonDiv = document.createElement("div");
+      moreButtonDiv.innerHTML = "more \u25BC"; // &#9660; is the HTML code for a down arrow
+      moreButtonDiv.style.backgroundColor = "#fff";
+      moreButtonDiv.style.color = "#000";
+      moreButtonDiv.style.padding = "8px 16px";
+      moreButtonDiv.style.border = "none";
+      moreButtonDiv.style.borderRadius = "4px";
+      moreButtonDiv.style.cursor = "pointer";
+      moreButtonDiv.style.margin = "10px";
+      moreButtonDiv.style.marginTop = "20px";
+      moreButtonDiv.addEventListener("click", () => {
+        moreButtonDiv.textContent =
+          moreButtonDiv.textContent === "more \u25BC" ? "less \u25B2" : "more \u25BC";
+      
+        priceControlDiv.style.display =
+          priceControlDiv.style.display === "none" ? "block" : "none";
+      });
+      map.controls[google.maps.ControlPosition.TOP_CENTER].push(moreButtonDiv);
 
       let openInfoWindow: google.maps.InfoWindow | null = null;
 
@@ -306,7 +343,9 @@ const page = () => {
                 .join("")}
             </div>
           
-            <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;" id="selectButton${index}" value="${pin.user}">Select</button>
+            <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;" id="selectButton${index}" value="${
+              pin.user
+            }">Select</button>
           </div>
             `,
           });
@@ -328,11 +367,8 @@ const page = () => {
 
           infowindow.open(map, marker);
 
-
-
           // Set the new InfoWindow as the currently open one
           openInfoWindow = infowindow;
-          
         });
       });
     }
@@ -392,16 +428,19 @@ const page = () => {
         const nearbyPosts: Post[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          
+
           const distanceInKm = getDistanceFromLatLonInKm(
             userLocation.lat,
             userLocation.lng,
             data.coords.lat,
             data.coords.lng
           );
+
           if (distanceInKm <= postsInKm) {
-            if(data.user != user.uid){
-              nearbyPosts.push(data as Post);
+            if (data.user != user.uid) {
+              if (data.price >= minPrice && data.price <= maxPrice) {
+                nearbyPosts.push(data as Post);
+              }
             }
           }
         });
@@ -412,7 +451,7 @@ const page = () => {
 
       fetchData();
     }
-  }, [userLocation, postsInKm]);
+  }, [userLocation, postsInKm, minPrice, maxPrice]);
 
   return (
     <div className="flex flex-1 items-center justify-center">

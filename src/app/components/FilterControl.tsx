@@ -12,16 +12,17 @@ export class FilterControl {
         controlUI.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.3)";
         controlUI.style.cursor = "pointer";
         controlUI.style.textAlign = "center";
-        controlUI.style.margin = "20px";
+        controlUI.style.margin = "10px";
+        controlUI.style.marginTop = "20px";
         controlUI.style.width = "100px"; // adjust as needed
-        controlUI.style.height = "40px"; // adjust as needed
+        controlUI.style.height = "29px"; // adjust as needed
         controlUI.title = "Click to set the circle radius";
         controlDiv.appendChild(controlUI);
         
         const controlSelect = document.createElement("select");
         controlSelect.style.width = "100%";
         controlSelect.style.height = "100%";
-        controlSelect.style.fontSize = "15px"; // adjust as needed
+        controlSelect.style.fontSize = "12px"; // adjust as needed
         controlSelect.style.border = "none";
         
         ["1", "2", "5", "10"].forEach((radius) => {
