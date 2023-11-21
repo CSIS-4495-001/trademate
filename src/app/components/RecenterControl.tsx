@@ -8,7 +8,8 @@ export class RecenterControl {
     const controlUI = document.createElement("div");
     controlUI.style.backgroundColor = "#fff";
     controlUI.style.marginRight = "0px";
-    controlUI.style.margin = "20px";
+    controlUI.style.margin = "10px";
+    controlUI.style.marginTop = "20px";
     controlUI.style.border = "1px solid #ccc";
     controlUI.style.borderRadius = "3px";
     controlUI.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.3)";
@@ -21,7 +22,7 @@ export class RecenterControl {
     const controlText = document.createElement("div");
     controlText.style.color = "rgb(25,25,25)";
     controlText.style.fontFamily = "Roboto,Arial,sans-serif";
-    controlText.style.fontSize = "16px";
+    controlText.style.fontSize = "12px";
     controlText.style.lineHeight = "38px";
     controlText.style.paddingLeft = "5px";
     controlText.style.paddingRight = "5px";
