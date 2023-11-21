@@ -23,7 +23,7 @@ export class RecenterControl {
     controlText.style.color = "rgb(25,25,25)";
     controlText.style.fontFamily = "Roboto,Arial,sans-serif";
     controlText.style.fontSize = "12px";
-    controlText.style.lineHeight = "38px";
+    controlText.style.lineHeight = "29px";
     controlText.style.paddingLeft = "5px";
     controlText.style.paddingRight = "5px";
     controlText.innerHTML = "Recenter";

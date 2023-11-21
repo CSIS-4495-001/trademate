@@ -13,7 +13,7 @@ export class PriceControl {
         controlUI.style.padding = "10px";
         controlUI.style.display = "flex";
         controlUI.style.flexDirection = "column";
-        controlUI.title = "Enter the price range";
+        controlUI.innerHTML = "Enter the price range";
         controlUI.style.marginTop = "60px";
         controlDiv.appendChild(controlUI);
 
@@ -30,17 +30,14 @@ export class PriceControl {
 
         const applyButton = document.createElement("button");
         applyButton.innerText = "Apply";
-        applyButton.style.width = "100%";
-        applyButton.style.fontSize = "14px";
+        applyButton.style.width = "105px";
+        applyButton.style.fontSize = "12px";
         applyButton.style.border = "none";
         applyButton.style.cursor = "pointer";
         applyButton.style.backgroundColor = "#007bff"; // Blue color, you can change it
         applyButton.style.color = "#fff";
         applyButton.style.padding = "8px";
         applyButton.style.borderRadius = "3px";
-
-        
-    
 
         controlUI.appendChild(applyButton);
 
@@ -55,13 +52,14 @@ export class PriceControl {
         const inputElement = document.createElement("input");
         inputElement.type = "number";
         inputElement.placeholder = placeholder;
-        inputElement.style.flex = "1";
+        inputElement.style.width = "50px";
         inputElement.style.height = "30px";
         inputElement.style.fontSize = "12px";
         inputElement.style.border = "1px solid #ddd";
         inputElement.style.borderRadius = "3px";
         inputElement.style.padding = "5px";
         inputElement.style.marginRight = "5px";
+        inputElement.style.marginTop = "5px";
         inputElement.style.appearance = "none"; // Add this line
         inputElement.value = initialValue.toString();
     

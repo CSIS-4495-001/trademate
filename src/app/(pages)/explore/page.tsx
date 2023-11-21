@@ -282,8 +282,8 @@ const page = () => {
 
       const moreButtonDiv = document.createElement("div");
       moreButtonDiv.innerHTML = "more \u25BC"; // &#9660; is the HTML code for a down arrow
-      moreButtonDiv.style.backgroundColor = "#3498db";
-      moreButtonDiv.style.color = "#fff";
+      moreButtonDiv.style.backgroundColor = "#fff";
+      moreButtonDiv.style.color = "#000";
       moreButtonDiv.style.padding = "8px 16px";
       moreButtonDiv.style.border = "none";
       moreButtonDiv.style.borderRadius = "4px";

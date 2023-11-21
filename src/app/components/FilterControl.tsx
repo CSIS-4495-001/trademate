@@ -15,7 +15,7 @@ export class FilterControl {
         controlUI.style.margin = "10px";
         controlUI.style.marginTop = "20px";
         controlUI.style.width = "100px"; // adjust as needed
-        controlUI.style.height = "40px"; // adjust as needed
+        controlUI.style.height = "29px"; // adjust as needed
         controlUI.title = "Click to set the circle radius";
         controlDiv.appendChild(controlUI);
         
