@@ -5,7 +5,7 @@ import { UserAuth } from "../../context/AuthContext.js";
 import { RecenterControl } from "@/app/components/RecenterControl";
 import { darkMapStyle } from "./mapStyles";
 import { db, storage } from "@/app/firebase";
-import { getFirestore } from "firebase/firestore";
+import { Timestamp, arrayUnion, getFirestore } from "firebase/firestore";
 import { Post } from "@/app/types/Post";
 import { getDistanceFromLatLonInKm } from "@/app/helpers/Geolocation";
 
@@ -28,12 +28,19 @@ import { Router } from "next/router.js";
 import { FilterControl } from "@/app/components/FilterControl";
 import { set } from "firebase/database";
 import { PriceControl } from "@/app/components/PriceControl";
+const { v4: uuidv4 } = require("uuid");
+
 
 interface UserData {
   displayName: string;
   email: string;
   text: string;
   uid: string;
+}
+
+interface reportData {
+  postId: string;
+  reason: string;
 }
 
 // Function to calculate distance between two locations
@@ -48,11 +55,14 @@ const page = () => {
   const [postsInKm, setPostsInKm] = useState(1);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100); // Set an initial maximum price
+  const myUUID = uuidv4();
+
 
   const [Nuser, setUser] = React.useState<UserData | null>(null);
 
   const [map, setMap] = useState<google.maps.Map | null>(null); // Store the map instance
   const [isUserLocationAvailable, setIsUserLocationAvailable] = useState(false);
+  const [message, setMessage] = useState("na");
 
   const mapContainerStyle = {
     width: "100%", // Set the width to 100% of the viewport
@@ -87,72 +97,133 @@ const page = () => {
 
   useEffect(() => {
     console.log("Nuser => ", Nuser);
+    const createChat = async () => {
+      console.log(
+        "searching for Nuser with username: ",
+        Nuser?.displayName.trim()
+      );
+  
+      if (Nuser) {
+        const combineId =
+          user.uid > Nuser.uid ? user.uid + Nuser.uid : Nuser.uid + user.uid;
+  
+        console.log("combineId => ", combineId);
+  
+        const res = await getDoc(doc(db, "chats", combineId));
+  
+        const checkUserChat = await getDoc(doc(db, "userChats", user.uid));
+        const checkNuserChat = await getDoc(doc(db, "userChats", Nuser.uid));
+  
+        if (!res.exists()) {
+          await setDoc(doc(db, "chats", combineId), { messages: arrayUnion({
+            id: myUUID,
+            text: message,
+            senderId: user.uid,
+            date: Timestamp.now(),
+          }), });
+  
+          if (!checkUserChat.exists()) {
+            await setDoc(doc(db, "userChats", user.uid), {
+              [combineId]: {
+                userInfo: {
+                  uid: Nuser.uid,
+                  displayName: Nuser.displayName,
+                },
+                date: serverTimestamp(),
+              },
+            });
+          }
+  
+          if (!checkNuserChat.exists()) {
+            await setDoc(doc(db, "userChats", Nuser.uid), {
+              [combineId]: {
+                userInfo: {
+                  uid: user.uid,
+                  displayName: user.displayName,
+                },
+                date: serverTimestamp(),
+              },
+            });
+          }
+  
+          await updateDoc(doc(db, "userChats", user.uid), {
+            [combineId + ".userInfo"]: {
+              uid: Nuser.uid,
+              displayName: Nuser.displayName,
+            },
+            [combineId + ".date"]: serverTimestamp(),
+          });
+  
+          await updateDoc(doc(db, "userChats", Nuser.uid), {
+            [combineId + ".userInfo"]: {
+              uid: user.uid,
+              displayName: user.displayName,
+            },
+            [combineId + ".date"]: serverTimestamp(),
+          });
+  
+          toast.success("Connection Created, Go to chat page to talk", {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        } else {
+
+          await updateDoc(doc(db, "chats", combineId), {
+            messages: arrayUnion({
+              id: myUUID,
+              text: message,
+              senderId: user.uid,
+              date: Timestamp.now(),
+            }),
+          });
+
+          
+
+          toast.info("Chat already exists, message has been sent!", {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
+      }
+      setUser(null); // Reset the user state after handling the selection
+    };
+
     if (Nuser) {
       createChat();
     }
-  }, [Nuser]);
 
-  const createChat = async () => {
-    console.log(
-      "searching for Nuser with username: ",
-      Nuser?.displayName.trim()
-    );
 
-    if (Nuser) {
-      const combineId =
-        user.uid > Nuser.uid ? user.uid + Nuser.uid : Nuser.uid + user.uid;
+  }, [Nuser, message]);
 
-      console.log("combineId => ", combineId);
 
-      const res = await getDoc(doc(db, "chats", combineId));
 
-      const checkUserChat = await getDoc(doc(db, "userChats", user.uid));
-      const checkNuserChat = await getDoc(doc(db, "userChats", Nuser.uid));
+const handleSelect = async (selectedUid: string) => {
+    await getSelecedUser(selectedUid);
+  };
 
-      if (!res.exists()) {
-        await setDoc(doc(db, "chats", combineId), { messages: [] });
+  const handleReport = async (selectedPost: string, reason: string) => {
+    const q = query(collection(db, "posts"), where("postId", "==", selectedPost));
+    const checkIfReported = await getDoc(doc(db, "reportedPosts", selectedPost));
 
-        if (!checkUserChat.exists()) {
-          await setDoc(doc(db, "userChats", user.uid), {
-            [combineId]: {
-              userInfo: {
-                uid: Nuser.uid,
-                displayName: Nuser.displayName,
-              },
-              date: serverTimestamp(),
-            },
-          });
-        }
+    try {
+      const querySnapshot = await getDocs(q);
+      console.log(querySnapshot);
 
-        if (!checkNuserChat.exists()) {
-          await setDoc(doc(db, "userChats", Nuser.uid), {
-            [combineId]: {
-              userInfo: {
-                uid: user.uid,
-                displayName: user.displayName,
-              },
-              date: serverTimestamp(),
-            },
-          });
-        }
+      if (querySnapshot.empty) {
 
-        await updateDoc(doc(db, "userChats", user.uid), {
-          [combineId + ".userInfo"]: {
-            uid: Nuser.uid,
-            displayName: Nuser.displayName,
-          },
-          [combineId + ".date"]: serverTimestamp(),
-        });
-
-        await updateDoc(doc(db, "userChats", Nuser.uid), {
-          [combineId + ".userInfo"]: {
-            uid: user.uid,
-            displayName: user.displayName,
-          },
-          [combineId + ".date"]: serverTimestamp(),
-        });
-
-        toast.success("Connection Created, Go to chat page to talk", {
+        toast.error("Error Reporting Post, Please try again.", {
           position: "bottom-left",
           autoClose: 3000,
           hideProgressBar: true,
@@ -162,8 +233,40 @@ const page = () => {
           progress: undefined,
           theme: "dark",
         });
+
       } else {
-        toast.error("Chat already exists", {
+        if(!checkIfReported.exists()) {
+          //update reportPost and add the post details
+          await setDoc(doc(db, "reportedPosts", selectedPost), {
+            reportedBy: [user.uid],
+            reason: [reason],
+            postDetails: querySnapshot.docs[0].data()
+          });
+        }
+        else{
+
+          //check if post exists by the same user
+          const checkIfReportedByUser = checkIfReported.data()?.reportedBy.includes(user.uid);
+
+          if(checkIfReportedByUser){
+            toast.error("You have already reported this post.", {
+              position: "bottom-left",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
+            return;
+          }
+          else{
+            await updateDoc(doc(db, "reportedPosts", selectedPost), {reportedBy: [...checkIfReported.data()?.reportedBy, user.uid], reason: [...checkIfReported.data()?.reason, reason]});
+          }
+        }
+
+        toast.success("Post Reported, Thank you for your feedback.", {
           position: "bottom-left",
           autoClose: 3000,
           hideProgressBar: true,
@@ -174,12 +277,9 @@ const page = () => {
           theme: "dark",
         });
       }
+    } catch (error) {
+      console.log(error);
     }
-    setUser(null); // Reset the user state after handling the selection
-  };
-
-  const handleSelect = async (selectedUid: string) => {
-    await getSelecedUser(selectedUid);
   };
 
   useEffect(() => {
@@ -316,50 +416,75 @@ const page = () => {
 
           const infowindow = new google.maps.InfoWindow({
             content: `
-            <div style="max-width: 300px; margin: 0 auto; background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px;">${
-              pin.title
-            }</h2>
-            <p style="color: #555; margin-bottom: 8px;">Description: ${
-              pin.description
-            }</p>
-            <p style="color: #555; margin-bottom: 8px;">Posted at: ${new Date(
-              pin.createdAt
-            )}</p>
-            <p style="color: #555; margin-bottom: 8px;">Coordinates: ${
-              pin.coords.lat
-            }, ${pin.coords.lng}</p>
-            <p style="color: #555; margin-bottom: 8px;">Location: ${
-              pin.location
-            }</p>
-            <p style="color: #555; margin-bottom: 8px;">Price: ${pin.price}</p>
-            
-            <div style="display: flex; gap: 8px; overflow: hidden; margin-bottom: 8px;">
-              ${pin.images
-                .map(
-                  (image) =>
-                    `<img src="${image}" alt="Post image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"/>`
-                )
-                .join("")}
-            </div>
-          
-            <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;" id="selectButton${index}" value="${
-              pin.user
-            }">Select</button>
-          </div>
+              <div style="max-width: 300px; margin: 0 auto; background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px;">${
+                  pin.title
+                }</h2>
+                <p style="color: #555; margin-bottom: 8px;">Description: ${
+                  pin.description
+                }</p>
+                <p style="color: #555; margin-bottom: 8px;">Posted at: ${new Date(
+                  pin.createdAt
+                )}</p>
+                <p style="color: #555; margin-bottom: 8px;">Coordinates: ${
+                  pin.coords.lat
+                }, ${pin.coords.lng}</p>
+                <p style="color: #555; margin-bottom: 8px;">Location: ${
+                  pin.location
+                }</p>
+                <p style="color: #555; margin-bottom: 8px;">Price: ${pin.price}</p>
+                
+                <div style="display: flex; gap: 8px; overflow: hidden; margin-bottom: 8px;">
+                  ${pin.images
+                    .map(
+                      (image) =>
+                        `<img src="${image}" alt="Post image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"/>`
+                    )
+                    .join("")}
+                </div>
+              
+                <div style="display: flex; gap: 8px;">
+                <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;" id="selectButton${index}" value="${pin.user}">Message</button>
+        
+                <button style="background-color: #e74c3c; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;" id="reportButton${index}" value="${pin.postId}">Report</button>
+              </div>
+              </div>
             `,
           });
 
           google.maps.event.addListenerOnce(infowindow, "domready", () => {
-            const selectButton = document.getElementById(
-              `selectButton${index}`
-            );
+            const selectButton = document.getElementById(`selectButton${index}`);
             if (selectButton) {
               selectButton.addEventListener("click", () => {
                 console.log("selectButton clicked");
                 const selectedUid = selectButton?.getAttribute("value");
                 console.log("selectedUid => ", selectedUid);
-                handleSelect(selectedUid!);
+
+                const message = prompt("Please enter the reason for reporting:");
+                if (message) {
+                  handleSelect(selectedUid!);
+                  setMessage("Title - " +  pin.title +  "\nDescription - " + pin.description + "\nPrice - " + pin.price + "\n-------------\n\n" +  message);
+                }
+                infowindow.close(); // Optionally close the InfoWindow after button click
+              });
+            }
+          });
+
+          google.maps.event.addListenerOnce(infowindow, "domready", () => {
+            const reportButton = document.getElementById(`reportButton${index}`);
+            if (reportButton) {
+              reportButton.addEventListener("click", () => {
+                console.log("reportButton clicked");
+                const selectedPostValue = reportButton?.getAttribute("value");
+                console.log("selectedPostValue => ", selectedPostValue);
+          
+                if (selectedPostValue) {
+                  const reason = prompt("Please enter the reason for reporting:");
+                  if (reason) {
+                    handleReport(selectedPostValue, reason);
+                  }
+                }
+          
                 infowindow.close(); // Optionally close the InfoWindow after button click
               });
             }
