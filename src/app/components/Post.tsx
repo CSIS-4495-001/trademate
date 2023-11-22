@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+  addDoc,
+  setDoc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { Props } from "@/app/types/Props";
 
@@ -61,6 +72,47 @@ const Post: React.FC<Props> = () => {
       return newImages;
     });
   };
+
+  const handleDelete = async (postId: string) => {
+    console.log("Deleting post with ID:", postId);
+
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      try {
+        // Query for the post
+        const postsQuery = query(
+          collection(db, "posts"),
+          where("postId", "==", postId)
+        );
+        const querySnapshot = await getDocs(postsQuery);
+
+        if (!querySnapshot.empty) {
+          // Get the first document from the query (there should only be one)
+          const postDoc = querySnapshot.docs[0];
+
+          // Get the post data
+          const postData = postDoc.data();
+
+          // Add the post to the deletedPosts collection
+          const deletedPostsRef = doc(db, "deletedPosts", postId);
+          await setDoc(deletedPostsRef, postData);
+
+          // Delete the post from the original collection
+          await deleteDoc(postDoc.ref);
+
+          // Remove the deleted post from the state
+          setUserPosts((prevPosts) => {
+            const newPosts = prevPosts.filter((post) => post.postId !== postId);
+            return newPosts;
+          });
+        } else {
+          console.error("Document does not exist");
+        }
+      } catch (error) {
+        console.error("Error deleting document: ", error);
+      }
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-black mx-auto max-w-screen-lg px-8 pt-5 pb-3">
       {userPosts.map((post, index) => (
@@ -68,6 +120,25 @@ const Post: React.FC<Props> = () => {
           key={index}
           className="bg-gray-500 shadow-md p-6 transition-transform transform hover:scale-105 border border-solid border-gray-500"
         >
+          <button
+            onClick={() => post.postId && handleDelete(post.postId)}
+            type="button"
+            className="text-gray-400 bg-transparent hover:bg-gray-200 float-right hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </button>
+
           <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
           <p>Description: </p>
           <div
