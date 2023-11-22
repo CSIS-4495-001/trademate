@@ -6,4 +6,5 @@ export interface Props {
   downVotes?: number;
   location?: string;
   price?: number;
+  postId?: string;
 }
