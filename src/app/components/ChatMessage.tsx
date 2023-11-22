@@ -58,7 +58,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             : "bg-gray-400 text-black shadow-lg"
         } ${isMainUser ? "float-right" : "float-left"}`}
       >
-        <p>{message.text}</p>
+        {message.text.split('\n').map((line, index) => <p key={index}>{line}</p>)}
         {message.image && (
           <img
             src={message?.image}
