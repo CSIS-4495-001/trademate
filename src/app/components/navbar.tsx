@@ -127,7 +127,7 @@ const Navbar = () => {
             {err ? <p className="text-red-500">Error signing in</p> : null}
           </ul>
         ) : (
-          <div className="flex items-center">
+          <div className="flex items-center pr-2">
             {/* <p className="mr-4">Welcome, <br/>{user.displayName}</p> */}
             <button
               onClick={handleSignOut}

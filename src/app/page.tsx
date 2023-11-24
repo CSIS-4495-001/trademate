@@ -16,7 +16,7 @@ export default function Home() {
     }
 
   return (
-    <main className="min-h-screen bg-gray-700">
+    <main className="bg-gray-700" style={{ height: "728px" }}>
     <div className="container mx-auto">
         <header className="py-8 text-center">
             <h1 className="text-4xl font-semibold text-white mb-4">Welcome to Your Barter Platform</h1>

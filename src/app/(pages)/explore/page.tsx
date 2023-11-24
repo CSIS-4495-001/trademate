@@ -95,6 +95,8 @@ const page = () => {
     }
   };
 
+
+
   useEffect(() => {
     console.log("Nuser => ", Nuser);
     const createChat = async () => {
@@ -331,10 +333,10 @@ const handleSelect = async (selectedUid: string) => {
 
       let circle = new google.maps.Circle({
         strokeColor: "#00FF00",
-        strokeOpacity: 0.3,
+        strokeOpacity: 0.1,
         strokeWeight: 2,
         fillColor: "#00FF00",
-        fillOpacity: 0.2,
+        fillOpacity: 0.1,
         map: map,
         center: userLocation,
         radius: postsInKm * 1000,
