@@ -68,7 +68,7 @@ const profile = () => {
   };
 
   return (
-    <div  className="max-w-full sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 shadow-xl text-gray-900 bg-gray-700">
+<div className="max-w-full sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 shadow-xl text-gray-900 bg-gray-700 min-h-screen">
 
 <div className="mx-auto w-48 h-48 relative -mt-16 border-4 border-gray-700 shadow-md rounded-full overflow-hidden bg-gray-700 ring-2 ring-blue-700 ring-opacity-100">
   <img
