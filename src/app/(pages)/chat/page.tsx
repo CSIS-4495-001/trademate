@@ -26,7 +26,7 @@ const page = () => {
         {/* Main Chat Window */}
         <div
           className="bg-gray-700 p-1 rounded-lg shadow text-white"
-          style={{ height: "718px" }}
+          style={{ height: "calc(100vh - 102px)" }}
         >
           <Chat />
         </div>

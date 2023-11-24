@@ -118,7 +118,7 @@ const Post: React.FC<Props> = () => {
       {userPosts.map((post, index) => (
         <div
           key={index}
-          className="bg-gray-500 shadow-md p-6 transition-transform transform hover:scale-105 border border-solid border-gray-500"
+          className="bg-gray-500 shadow-md p-6 transition-transform transform hover:scale-105 border border-solid border-gray-500 ring-2 ring-gray-500 ring-opacity-50"
         >
           <button
             onClick={() => post.postId && handleDelete(post.postId)}
@@ -139,13 +139,13 @@ const Post: React.FC<Props> = () => {
             </svg>
           </button>
 
-          <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
-          <p>Description: </p>
+          <h1 className="text-2xl font-normal mb-2 pl-2 bg-gray-600 rounded-lg text-gray-300">{post.title}</h1>
+          <p className="pl-2">Description: </p>
           <div
-            className="bg-gray-400 rounded-sm p-2 mb-4"
+            className="bg-gray-600 rounded-lg p-2 mb-4 mix-blend-blemish"
             style={{ height: "100px", overflowY: "auto" }}
           >
-            <p>{post.description}</p>
+            <p className="text-gray-400">{post.description}</p>
           </div>
           {post.images && post.images.length > 0 && (
             <div className="relative">
@@ -176,8 +176,9 @@ const Post: React.FC<Props> = () => {
             style={{
               display: "flex",
               alignItems: "center",
-              paddingTop: "20px",
             }}
+
+            className="bg-gray-600 rounded-lg text-gray-400 p-1 mt-4"
           >
             <svg
               height="15pt"
@@ -188,10 +189,10 @@ const Post: React.FC<Props> = () => {
             >
               <path d="M256 0C156.125 0 76 80.125 76 180c0 39.625 13.875 67.5 38 112.25l141.875 219.75c2.125 3.25 6.125 5.5 10.125 5.5s8-2.25 10.125-5.5L398 292.25C422.125 247.5 436 219.625 436 180 436 80.125 355.875 0 256 0zm0 282.25c-31.875 0-57.5-25.625-57.5-57.5s25.625-57.5 57.5-57.5 57.5 25.625 57.5 57.5-25.625 57.5-57.5 57.5z" />
             </svg>
-            <p style={{ marginLeft: "5px" }}>{post.location}</p>
+            <p style={{ marginLeft: "5px" }}  >{post.location}</p>
           </div>
           <p
-            className="text-green-500 font-semibold pt-4"
+            className="text-green-900 font-semibold pt-4 pl-1"
             style={{
               fontSize: "1.2rem",
             }}
