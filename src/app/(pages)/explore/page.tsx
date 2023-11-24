@@ -52,7 +52,7 @@ const page = () => {
     lng: -123.104274,
   });
 
-  const [postsInKm, setPostsInKm] = useState(1);
+  const [postsInKm, setPostsInKm] = useState(5);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(100); // Set an initial maximum price
   const myUUID = uuidv4();
@@ -416,44 +416,46 @@ const handleSelect = async (selectedUid: string) => {
             openInfoWindow.close();
           }
 
+
           const infowindow = new google.maps.InfoWindow({
             content: `
-              <div style="max-width: 300px; margin: 0 auto; background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px;">${
-                  pin.title
-                }</h2>
-                <p style="color: #555; margin-bottom: 8px;">Description: ${
-                  pin.description
-                }</p>
-                <p style="color: #555; margin-bottom: 8px;">Posted at: ${new Date(
-                  pin.createdAt
-                )}</p>
-                <p style="color: #555; margin-bottom: 8px;">Coordinates: ${
-                  pin.coords.lat
-                }, ${pin.coords.lng}</p>
-                <p style="color: #555; margin-bottom: 8px;">Location: ${
+              <div style="max-width: 300px; margin: 0 auto; background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
+              <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px; color: #0e1626; overflow: auto;">${
+                pin.title
+              }</h2>
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 8px 0;">
+              <p>Description:</p>
+              <div style="background-color: #f0f0f0; padding: 10px; overflow: auto; border-radius: 4px; margin-top: 10px; margin-bottom: 10px">
+              <p style="font-size: 0.8rem; color: black; margin-bottom: 8px;">
+                ${pin.description}
+              </p>
+            </div>
+            
+              <div style="white-space: nowrap; overflow-x: auto; margin-bottom: 8px;">
+              ${pin.images
+                .map(
+                  (image) =>
+                    `<div style="display: inline-block; width: 100px; height: 100px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-right:15px">
+                      <img src="${image}" alt="Post image" style="width: 100%; height: 100%; object-fit: cover; object-position: center;"/>
+                    </div>`
+                )
+                .join("")}
+            </div>
+            
+            <p style="font-size: 1rem; color: green; margin-top: 10px; margin-bottom:10px ">$ ${pin.price}</p>   
+
+                <p style="font-size: 0.6rem; color: #555; margin-bottom: 8px; overflow: auto;">Location: ${
                   pin.location
                 }</p>
-                <p style="color: #555; margin-bottom: 8px;">Price: ${pin.price}</p>
-                
-                <div style="display: flex; gap: 8px; overflow: hidden; margin-bottom: 8px;">
-                  ${pin.images
-                    .map(
-                      (image) =>
-                        `<img src="${image}" alt="Post image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"/>`
-                    )
-                    .join("")}
-                </div>
-              
+
                 <div style="display: flex; gap: 8px;">
-                <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;" id="selectButton${index}" value="${pin.user}">Message</button>
-        
-                <button style="background-color: #e74c3c; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;" id="reportButton${index}" value="${pin.postId}">Report</button>
-              </div>
+                  <button style="background-color: #3498db; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" id="selectButton${index}" value="${pin.user}" onmouseover="this.style.backgroundColor='#2980b9';" onmouseout="this.style.backgroundColor='#3498db';">Message</button>
+          
+                  <button style="background-color: #e74c3c; color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;" id="reportButton${index}" value="${pin.postId}" onmouseover="this.style.backgroundColor='#c0392b';" onmouseout="this.style.backgroundColor='#e74c3c';">Report</button>
+                </div>
               </div>
             `,
           });
-
           google.maps.event.addListenerOnce(infowindow, "domready", () => {
             const selectButton = document.getElementById(`selectButton${index}`);
             if (selectButton) {
@@ -462,10 +464,10 @@ const handleSelect = async (selectedUid: string) => {
                 const selectedUid = selectButton?.getAttribute("value");
                 console.log("selectedUid => ", selectedUid);
 
-                const message = prompt("Please enter the reason for reporting:");
+                const message = prompt("Please enter your message:","Hi, I am interested in your post!");
                 if (message) {
                   handleSelect(selectedUid!);
-                  setMessage("Title - " +  pin.title +  "\nDescription - " + pin.description + "\nPrice - " + pin.price + "\n-------------\n\n" +  message);
+                  setMessage("Title - " +  pin.title +  "\nDescription - " + pin.description + "\nPrice - $ " + pin.price + "\n-------------\n\n" +  message);
                 }
                 infowindow.close(); // Optionally close the InfoWindow after button click
               });
@@ -487,7 +489,7 @@ const handleSelect = async (selectedUid: string) => {
                   }
                 }
           
-                infowindow.close(); // Optionally close the InfoWindow after button click
+                infowindow.close();
               });
             }
           });

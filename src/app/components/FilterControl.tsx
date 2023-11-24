@@ -25,7 +25,7 @@ export class FilterControl {
         controlSelect.style.fontSize = "12px"; // adjust as needed
         controlSelect.style.border = "none";
         
-        ["1", "2", "5", "10"].forEach((radius) => {
+        ["1", "2", "5", "10", "20", "30"].forEach((radius) => {
           const option = document.createElement("option");
           option.value = radius;
           option.text = radius + " km";

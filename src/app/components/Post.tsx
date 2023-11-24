@@ -33,6 +33,7 @@ const Post: React.FC<Props> = () => {
           if (querySnapshot.empty) {
             console.log("No posts found for the user");
           } else {
+            console.log("Total posts",querySnapshot.docs.length);
             const postsData: Props[] = [];
             querySnapshot.forEach((doc) => {
               const postData = doc.data() as Props;
@@ -118,12 +119,12 @@ const Post: React.FC<Props> = () => {
       {userPosts.map((post, index) => (
         <div
           key={index}
-          className="bg-gray-500 shadow-md p-6 transition-transform transform hover:scale-105 border border-solid border-gray-500 ring-2 ring-gray-500 ring-opacity-50"
+          className="bg-gray-500 shadow-md p-6 transition-transform transform hover:scale-105 border border-solid border-gray-500 ring-2 ring-gray-500 ring-opacity-50 rounded-md"
         >
           <button
             onClick={() => post.postId && handleDelete(post.postId)}
             type="button"
-            className="text-gray-400 bg-transparent hover:bg-gray-200 float-right hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+            className="text-gray-400 bg-gray-600 hover:bg-gray-200 float-right hover:text-gray-900 rounded-sm text-sm p-1.5 ml-auto inline-flex items-center"
           >
             <svg
               className="w-5 h-5"
@@ -132,17 +133,16 @@ const Post: React.FC<Props> = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               ></path>
             </svg>
           </button>
-
-          <h1 className="text-2xl font-normal mb-2 pl-2 bg-gray-600 rounded-lg text-gray-300">{post.title}</h1>
-          <p className="pl-2">Description: </p>
+          <h1 className="text-2xl font-normal mb-2 pl-2 bg-gray-600 rounded-sm text-gray-300" style={{ overflowY: "auto"  }}>{post.title}</h1>
+          <p className="pl-2 text-gray-900">Description</p>
           <div
-            className="bg-gray-600 rounded-lg p-2 mb-4 mix-blend-blemish"
+            className="bg-gray-600 rounded-sm p-2 mb-4 mix-blend-blemish"
             style={{ height: "100px", overflowY: "auto" }}
           >
             <p className="text-gray-400">{post.description}</p>
@@ -150,7 +150,7 @@ const Post: React.FC<Props> = () => {
           {post.images && post.images.length > 0 && (
             <div className="relative">
               <img
-                className="w-full h-60 object-cover rounded-md"
+                className="w-full h-60 object-cover rounded-sm"
                 src={post.images[currentImages[index]]}
                 alt={`Image ${currentImages[index]}`}
               />
@@ -178,7 +178,7 @@ const Post: React.FC<Props> = () => {
               alignItems: "center",
             }}
 
-            className="bg-gray-600 rounded-lg text-gray-400 p-1 mt-4"
+            className="bg-gray-600 rounded-sm text-gray-400 p-1 mt-4"
           >
             <svg
               height="15pt"
@@ -189,7 +189,7 @@ const Post: React.FC<Props> = () => {
             >
               <path d="M256 0C156.125 0 76 80.125 76 180c0 39.625 13.875 67.5 38 112.25l141.875 219.75c2.125 3.25 6.125 5.5 10.125 5.5s8-2.25 10.125-5.5L398 292.25C422.125 247.5 436 219.625 436 180 436 80.125 355.875 0 256 0zm0 282.25c-31.875 0-57.5-25.625-57.5-57.5s25.625-57.5 57.5-57.5 57.5 25.625 57.5 57.5-25.625 57.5-57.5 57.5z" />
             </svg>
-            <p style={{ marginLeft: "5px" }}  >{post.location}</p>
+            <p style={{ marginLeft: "5px", height: "50px", overflowY: "auto"  }}  >{post.location}</p>
           </div>
           <p
             className="text-green-900 font-semibold pt-4 pl-1"
