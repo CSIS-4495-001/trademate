@@ -420,12 +420,12 @@ const handleSelect = async (selectedUid: string) => {
           const infowindow = new google.maps.InfoWindow({
             content: `
               <div style="max-width: 300px; margin: 0 auto; background-color: #ffffff; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif;">
-              <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px; color: #0e1626; overflow: auto;">${
+              <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 8px; color: #0e1626; overflow: auto; height: 32px;">${
                 pin.title
               }</h2>
               <hr style="border: none; border-top: 1px solid #ddd; margin: 8px 0;">
               <p>Description:</p>
-              <div style="background-color: #f0f0f0; padding: 10px; overflow: auto; border-radius: 4px; margin-top: 10px; margin-bottom: 10px">
+              <div style="background-color: #f0f0f0; padding: 10px; overflow: auto; height: 50px; border-radius: 4px; margin-top: 10px; margin-bottom: 10px">
               <p style="font-size: 0.8rem; color: black; margin-bottom: 8px;">
                 ${pin.description}
               </p>
@@ -456,6 +456,7 @@ const handleSelect = async (selectedUid: string) => {
               </div>
             `,
           });
+          
           google.maps.event.addListenerOnce(infowindow, "domready", () => {
             const selectButton = document.getElementById(`selectButton${index}`);
             if (selectButton) {

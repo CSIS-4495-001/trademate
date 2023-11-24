@@ -139,7 +139,7 @@ const Post: React.FC<Props> = () => {
               ></path>
             </svg>
           </button>
-          <h1 className="text-2xl font-normal mb-2 pl-2 bg-gray-600 rounded-sm text-gray-300" style={{ overflowY: "auto"  }}>{post.title}</h1>
+          <h1 className="text-2xl font-normal mb-2 pl-2 bg-gray-600 rounded-sm text-gray-300" style={{ height: "32px", overflowY: "auto"  }}>{post.title}</h1>
           <p className="pl-2 text-gray-900">Description</p>
           <div
             className="bg-gray-600 rounded-sm p-2 mb-4 mix-blend-blemish"
