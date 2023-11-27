@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import react, { useEffect, useState } from "react";
 import { UserAuth } from "../../context/AuthContext.js";
 import Modal from "react-modal";
-import styles from "@/app/components/Navbar/Navbar.module.css";
+import styles from "@/app/components/Navbar/navbar.module.css";
 import {
   getAuth,
   isSignInWithEmailLink,
