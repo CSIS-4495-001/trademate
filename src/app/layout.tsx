@@ -3,7 +3,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar/navbar";
 import { AuthContextProvider } from "./context/AuthContext.js";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,10 +19,12 @@ export default function RootLayout({
         <title>TradeMate - A project by Gaurav and Anshdeep</title>
       </head>
       <body className={inter.className}>
-        <AuthContextProvider>
-          <Navbar />
-          {children}
-        </AuthContextProvider>
+        <div id="app-root">
+          <AuthContextProvider>
+            <Navbar />
+            {children}
+          </AuthContextProvider>
+        </div>
 
         <script async src="/js/static.js"></script>
         <script
