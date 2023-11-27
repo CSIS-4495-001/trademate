@@ -1,13 +1,22 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import react, { useEffect, useState } from "react";
-import { UserAuth } from "../context/AuthContext.js";
-import { getAnalytics, logEvent, isSupported } from "firebase/analytics";
+import { UserAuth } from "../../context/AuthContext.js";
+import Modal from "react-modal";
+import styles from "@/app/components/Navbar/Navbar.module.css";
+import {
+  getAuth,
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+} from "firebase/auth";
 
 const Navbar = () => {
-  const { user, googleSignIn, logOut } = UserAuth();
+  const { user, googleSignIn, logOut, handleSendEmailLink, saveUserDetails } =
+    UserAuth();
   const [err, setErr] = useState(false);
   const [loading, setLoading] = react.useState(true);
+  const [emailModalIsOpen, setEmailModalIsOpen] = useState(false);
+  const [email, setEmail] = useState("");
   const router = useRouter();
 
   const handleSignIn = async () => {
@@ -16,6 +25,55 @@ const Navbar = () => {
     } catch (error) {
       console.log(error);
       setErr(true);
+    }
+  };
+
+  const handleEmailVerification = () => {
+    const auth = getAuth();
+    const isSignIn = isSignInWithEmailLink(auth, window.location.href);
+
+    if (isSignIn) {
+      const email = window.localStorage.getItem("emailForSignIn"); // Retrieve the email
+      if (email) {
+        signInWithEmailLink(auth, email, window.location.href)
+          .then((result) => {
+            // User is signed in
+            console.log("Successfully signed in:", result.user);
+            window.localStorage.removeItem("emailForSignIn");
+            saveUserDetails(result.user);
+            // Redirect or update UI as needed (e.g., navigate to a logged-in page)
+          })
+          .catch((error) => {
+            // Handle sign-in errors
+            console.error("Error signing in:", error);
+            // Redirect or update UI accordingly
+          });
+      } else {
+        // Handle missing email address
+        console.error("Email address not found.");
+        // Redirect or update UI accordingly
+      }
+    }
+  };
+
+  const openEmailLogin = async () => {
+    setEmailModalIsOpen(true);
+  };
+
+  const handleEmailLogin = async () => {
+    if (email.trim() !== "") {
+      try {
+        console.log({ email, handleSendEmailLink });
+
+        await handleSendEmailLink(email);
+        // Close the modal or perform other actions after sending the link
+        setEmailModalIsOpen(false);
+      } catch (error) {
+        console.error("Error sending email link:", error);
+        // Handle the error (e.g., display an error message)
+      }
+    } else {
+      // Handle invalid or empty email address
     }
   };
 
@@ -36,11 +94,14 @@ const Navbar = () => {
     };
 
     checkAuthentication();
+    handleEmailVerification();
   }, [user]);
 
+  Modal.setAppElement("#app-root");
+
   return (
-<nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 p-5 bg-gray-700 pt-9 pb-9 pr-9">
-        <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
+    <nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 p-5 bg-gray-700 pt-9 pb-9 pr-9">
+      <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
         <div className="flex items-center justify-between w-full md:w-auto">
           <div className="-mr-2 flex items-center md:hidden">
             <button
@@ -124,6 +185,19 @@ const Navbar = () => {
                 </button>
               </div>
             </li>
+
+            <li className="p-2 cursor-pointer hover:underline">
+              <div className="px-6 sm:px-0 max-w-sm">
+                <button
+                  type="button"
+                  className="text-white w-full bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-between dark:focus:ring-gray-700 mr-2 mb-2"
+                  onClick={openEmailLogin} // Assuming handleEmailLogin function exists for email login
+                >
+                  Login with Email
+                </button>
+              </div>
+            </li>
+
             {err ? <p className="text-red-500">Error signing in</p> : null}
           </ul>
         ) : (
@@ -138,6 +212,41 @@ const Navbar = () => {
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={emailModalIsOpen}
+        onRequestClose={() => setEmailModalIsOpen(false)}
+        contentLabel="Enter Email Modal"
+        className={styles.modal}
+        shouldCloseOnOverlayClick={true}
+        style={{
+          overlay: {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(19, 19, 19, 0.75)",
+          },
+        }}
+      >
+        <div className={styles.emailModal}>
+          <h2 className="text-lg font-semibold mb-4">Enter Your Email</h2>
+          <input
+            type="email"
+            placeholder="Please enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="border border-gray-300 rounded-md py-2 px-3 mb-4 w-full"
+          />
+          <button
+            onClick={handleEmailLogin}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            Send Email Link
+          </button>
+        </div>
+      </Modal>
     </nav>
   );
 };

@@ -1,0 +1,42 @@
+/* Add these styles to your global CSS or use a CSS module for scoped styles */
+
+/* Styles for the overall modal */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: none;
+    outline: none;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 300px; /* Adjust the width as needed */
+    width: 100%;
+  }
+  
+  /* Styles for the overlay/background behind the modal */
+  .overlay {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.75);
+    z-index: 999; 
+  }
+  
+  /* Styles for elements inside the modal */
+  .emailModal {
+    text-align: center;
+  }
+  
+  /* Additional styles for input and button */
+  .modal input {
+    /* Your input styles */
+  }
+  
+  .modal button {
+    /* Your button styles */
+  }
+  

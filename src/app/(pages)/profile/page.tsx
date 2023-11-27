@@ -9,7 +9,6 @@ import Post from "@/app/components/Post";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/app/firebase";
 
-
 const profile = () => {
   const { user } = UserAuth();
   const [loading, setLoading] = useState(true);
@@ -20,7 +19,6 @@ const profile = () => {
     latitude: 0,
     longitude: 0,
   });
-
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -56,10 +54,9 @@ const profile = () => {
       // Geolocation is not supported by the browser
       console.error("Geolocation is not supported");
     }
-  
+
     // checkAuthentication();
   }, [user]);
-
 
   const handleOutsideClick = (e: React.MouseEvent) => {
     if (isModalOpen && e.target === e.currentTarget) {
@@ -68,27 +65,31 @@ const profile = () => {
   };
 
   return (
-<div className="max-w-full sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 shadow-xl text-gray-900 bg-gray-700 min-h-screen">
-
-<div className="mx-auto w-48 h-48 relative -mt-16 border-4 border-gray-700 shadow-md rounded-full overflow-hidden bg-gray-700 ring-2 ring-blue-700 ring-opacity-100">
-  <img
-    className="object-cover object-center h-48 w-48 mix-blend"
-    src={user?.photoURL}
-    alt="User profile"
-  />
-</div>
-    <div className="text-center mt-2">
-    <h2 className="text-white font-semibold" style={{ fontSize: '1.5em' }}>{user?.displayName}</h2>
-      <p className="text-gray-400 text-black">User</p>
-    </div>
+    <div className="max-w-full sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 shadow-xl text-gray-900 bg-gray-700 min-h-screen">
+      <div className="mx-auto w-48 h-48 relative -mt-16 border-4 border-gray-700 shadow-md rounded-full overflow-hidden bg-gray-700 ring-2 ring-blue-700 ring-opacity-100">
+        <img
+          className="object-cover object-center h-48 w-48 mix-blend"
+          src={
+            user?.photoURL ||
+            "https://img.icons8.com/?size=256&id=tZuAOUGm9AuS&format=png"
+          }
+          alt="User profile"
+        />
+      </div>
+      <div className="text-center mt-2">
+        <h2 className="text-white font-semibold" style={{ fontSize: "1.5em" }}>
+          {user?.displayName}
+        </h2>
+        <p className="text-gray-400 text-black">User</p>
+      </div>
 
       <div className="p-4 border-t mx-8 mt-2 z-1000 shadow-lg">
-      <button
-  className="w-1/4 block mx-auto rounded-full bg-gray-900 font-semibold text-white px-4 py-1 shadow-lg ring-2 ring-gray-400 ring-opacity-100 transform transition-transform duration-100 hover:scale-105"
-  onClick={openModal}
->
-  Create Post
-</button>
+        <button
+          className="w-1/4 block mx-auto rounded-full bg-gray-900 font-semibold text-white px-4 py-1 shadow-lg ring-2 ring-gray-400 ring-opacity-100 transform transition-transform duration-100 hover:scale-105"
+          onClick={openModal}
+        >
+          Create Post
+        </button>
 
         {isModalOpen && (
           <div
@@ -103,7 +104,6 @@ const profile = () => {
       </div>
       <Post />
     </div>
-    
   );
 };
 
