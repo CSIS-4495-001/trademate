@@ -11,8 +11,15 @@ import {
 } from "firebase/auth";
 
 const Navbar = () => {
-  const { user, googleSignIn, logOut, handleSendEmailLink, saveUserDetails } =
-    UserAuth();
+  const {
+    user,
+    googleSignIn,
+    logOut,
+    handleSendEmailLink,
+    saveUserDetails,
+    isAdmin,
+    setIsAdmin,
+  } = UserAuth();
   const [err, setErr] = useState(false);
   const [loading, setLoading] = react.useState(true);
   const [emailModalIsOpen, setEmailModalIsOpen] = useState(false);
@@ -93,9 +100,20 @@ const Navbar = () => {
       setLoading(false);
     };
 
+    if (user && process.env.NEXT_PUBLIC_adminUserIds) {
+      if (
+        user &&
+        process.env.NEXT_PUBLIC_adminUserIds.split(", ").includes(user.uid)
+      ) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    }
+
     checkAuthentication();
     handleEmailVerification();
-  }, [user]);
+  }, [user, isAdmin]);
 
   Modal.setAppElement("#app-root");
 
@@ -131,6 +149,15 @@ const Navbar = () => {
 
       {!user ? (
         <div></div>
+      ) : isAdmin ? (
+        <div className="hidden md:flex md:space-x-10">
+          <Link
+            href="/admin"
+            className="font-medium text-white hover:text-gray-900 transition duration-150 ease-in-out"
+          >
+            Admin
+          </Link>
+        </div>
       ) : (
         <div className="hidden md:flex md:space-x-10">
           <Link

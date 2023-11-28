@@ -24,6 +24,7 @@ jobs:
           echo "NEXT_PUBLIC_appId=${{ secrets.NEXT_PUBLIC_APPID }}" >> .env
           echo "NEXT_PUBLIC_measurementId=${{ secrets.NEXT_PUBLIC_MEASUREMENTID }}" >> .env
           echo "NEXT_PUBLIC_googlemapsapi=${{ secrets.NEXT_PUBLIC_GOOGLEMAPSAPI }}" >> .env
+          echo "NEXT_PUBLIC_adminUserIds=${{ secrets.NEXT_PUBLIC_ADMINUSERIDS }}" >> .env
           npm i && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

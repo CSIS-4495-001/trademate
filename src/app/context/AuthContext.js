@@ -16,6 +16,7 @@ const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleSendEmailLink = async (email) => {
     const auth = getAuth();
@@ -126,6 +127,8 @@ export const AuthContextProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        isAdmin,
+        setIsAdmin,
         googleSignIn,
         logOut,
         handleSendEmailLink,
