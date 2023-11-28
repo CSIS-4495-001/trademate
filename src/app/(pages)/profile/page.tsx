@@ -5,7 +5,7 @@ import { UserAuth } from "@/app/context/AuthContext.js";
 import Spinner from "@/app/components/Spinner";
 import MultiStepForm from "@/app/components/MultiStepForm";
 import AddPostForm from "@/app/components/addPostForm";
-import Post from "@/app/components/Post";
+import Post from "@/app/components/Posts/Post";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/app/firebase";
 

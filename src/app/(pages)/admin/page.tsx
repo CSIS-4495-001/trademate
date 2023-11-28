@@ -12,7 +12,7 @@ const admin = () => {
     <div className="flex flex-1 items-center justify-center p-6">
       <div className="w-full max-w-lg">
         <div className="p-4">
-          <h1>Admin page</h1>
+          <h1>Admin Dashboard page</h1>
         </div>
       </div>
     </div>

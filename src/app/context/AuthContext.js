@@ -88,7 +88,6 @@ export const AuthContextProvider = ({ children }) => {
     const userDetails = {
       displayName: user.displayName.toLowerCase(),
       email: user.email,
-      text: "yoho",
       uid: user.uid,
       // Add other user details as needed.
     };
