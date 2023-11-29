@@ -6,8 +6,11 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/app/firebase";
 import { serverTimestamp } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
+interface AddPostFormProps {
+  triggerPostRefresh: () => void;
+}
 
-const AddPostForm = ({}) => {
+const AddPostForm: React.FC<AddPostFormProps> = ({ triggerPostRefresh }) => {
   const { user } = UserAuth();
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -65,6 +68,10 @@ const AddPostForm = ({}) => {
       // Add the new post to Firestore
       const docRef = await addDoc(collection(db, "posts"), newPost);
       console.log("Post added with ID: ", docRef.id);
+
+      // Update profile page
+      triggerPostRefresh();
+
       setShowNotification(true);
       console.log("Before closing modal");
       setShowFormModal(false);
@@ -112,7 +119,6 @@ const AddPostForm = ({}) => {
     setLocation(e.target.value);
     setIsLocationSelected(false);
   };
-
 
   const closeMapModal = () => {
     setShowMapModal(false);

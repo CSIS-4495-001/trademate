@@ -155,7 +155,13 @@ const Navbar = () => {
             href="/admin"
             className="font-medium text-white hover:text-gray-900 transition duration-150 ease-in-out"
           >
-            Admin
+            Dashboard
+          </Link>
+          <Link
+            href="/admin/moderate"
+            className="font-medium text-white hover:text-gray-900 transition duration-150 ease-in-out"
+          >
+            Moderate
           </Link>
         </div>
       ) : (

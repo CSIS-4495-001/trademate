@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { UserAuth } from "../context/AuthContext";
+import { UserAuth } from "../../context/AuthContext";
 import {
   collection,
   query,
@@ -12,11 +12,11 @@ import {
   setDoc,
   getDoc,
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { Props } from "@/app/types/Props";
 
 const Post: React.FC<Props> = () => {
-  const { user } = UserAuth();
+  const { user, isAdmin } = UserAuth();
   const [userPosts, setUserPosts] = useState<Props[]>([]);
   const [currentImages, setCurrentImages] = useState(
     Array(userPosts.length).fill(0)
@@ -25,7 +25,9 @@ const Post: React.FC<Props> = () => {
   useEffect(() => {
     const fetchUserPosts = async () => {
       if (user) {
-        const q = query(collection(db, "posts"), where("user", "==", user.uid));
+        const q = isAdmin
+          ? query(collection(db, "posts"))
+          : query(collection(db, "posts"), where("user", "==", user.uid));
 
         try {
           const querySnapshot = await getDocs(q);
@@ -33,7 +35,7 @@ const Post: React.FC<Props> = () => {
           if (querySnapshot.empty) {
             console.log("No posts found for the user");
           } else {
-            console.log("Total posts",querySnapshot.docs.length);
+            console.log("Total posts", querySnapshot.docs.length);
             const postsData: Props[] = [];
             querySnapshot.forEach((doc) => {
               const postData = doc.data() as Props;
@@ -139,7 +141,12 @@ const Post: React.FC<Props> = () => {
               ></path>
             </svg>
           </button>
-          <h1 className="text-2xl font-normal mb-2 pl-2 bg-gray-600 rounded-sm text-gray-300" style={{ height: "32px", overflowY: "auto"  }}>{post.title}</h1>
+          <h1
+            className="text-2xl font-normal mb-2 pl-2 bg-gray-600 rounded-sm text-gray-300"
+            style={{ height: "32px", overflowY: "auto" }}
+          >
+            {post.title}
+          </h1>
           <p className="pl-2 text-gray-900">Description</p>
           <div
             className="bg-gray-600 rounded-sm p-2 mb-4 mix-blend-blemish"
@@ -177,7 +184,6 @@ const Post: React.FC<Props> = () => {
               display: "flex",
               alignItems: "center",
             }}
-
             className="bg-gray-600 rounded-sm text-gray-400 p-1 mt-4"
           >
             <svg
@@ -189,7 +195,9 @@ const Post: React.FC<Props> = () => {
             >
               <path d="M256 0C156.125 0 76 80.125 76 180c0 39.625 13.875 67.5 38 112.25l141.875 219.75c2.125 3.25 6.125 5.5 10.125 5.5s8-2.25 10.125-5.5L398 292.25C422.125 247.5 436 219.625 436 180 436 80.125 355.875 0 256 0zm0 282.25c-31.875 0-57.5-25.625-57.5-57.5s25.625-57.5 57.5-57.5 57.5 25.625 57.5 57.5-25.625 57.5-57.5 57.5z" />
             </svg>
-            <p style={{ marginLeft: "5px", height: "50px", overflowY: "auto"  }}  >{post.location}</p>
+            <p style={{ marginLeft: "5px", height: "50px", overflowY: "auto" }}>
+              {post.location}
+            </p>
           </div>
           <p
             className="text-green-900 font-semibold pt-4 pl-1"
