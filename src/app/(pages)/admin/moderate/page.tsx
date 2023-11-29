@@ -13,7 +13,6 @@ const Moderate = () => {
     <div className="flex flex-1 items-center justify-center p-6">
       <div className="w-full">
         <div className="p-4">
-          <h1>Reported Posts page</h1>
           <ReportedPosts />
         </div>
       </div>

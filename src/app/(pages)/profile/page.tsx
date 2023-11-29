@@ -15,6 +15,7 @@ const profile = () => {
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refreshPosts, setRefreshPosts] = useState(false);
   const [userLocation, setUserLocation] = useState({
     latitude: 0,
     longitude: 0,
@@ -56,7 +57,30 @@ const profile = () => {
     }
 
     // checkAuthentication();
-  }, [user]);
+    fetchUserPosts();
+  }, [user, refreshPosts]);
+
+  const fetchUserPosts = async () => {
+    // Your logic for fetching user posts goes here
+    // For example:
+    if (user) {
+      try {
+        const q = query(collection(db, "posts"), where("user", "==", user.uid));
+
+        const querySnapshot = await getDocs(q);
+
+        // Process the query snapshot to get user posts...
+      } catch (error) {
+        console.error("Error fetching user posts:", error);
+      }
+    } else {
+      console.log("Waiting for user");
+    }
+  };
+
+  const triggerPostRefresh = () => {
+    setRefreshPosts((prevState) => !prevState);
+  };
 
   const handleOutsideClick = (e: React.MouseEvent) => {
     if (isModalOpen && e.target === e.currentTarget) {
@@ -78,7 +102,7 @@ const profile = () => {
       </div>
       <div className="text-center mt-2">
         <h2 className="text-white font-semibold" style={{ fontSize: "1.5em" }}>
-          {user?.displayName}
+          {user?.displayName || user?.email.split("@")[0]}
         </h2>
         <p className="text-gray-400 text-black">User</p>
       </div>
@@ -97,12 +121,12 @@ const profile = () => {
             onClick={handleOutsideClick}
           >
             <div className="bg-white p-8 rounded-md">
-              <AddPostForm />
+              <AddPostForm triggerPostRefresh={triggerPostRefresh} />
             </div>
           </div>
         )}
       </div>
-      <Post />
+      <Post key={refreshPosts.toString()} />
     </div>
   );
 };
