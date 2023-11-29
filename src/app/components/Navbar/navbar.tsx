@@ -4,6 +4,9 @@ import react, { useEffect, useState } from "react";
 import { UserAuth } from "../../context/AuthContext.js";
 import Modal from "react-modal";
 import styles from "@/app/components/Navbar/navbar.module.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import {
   getAuth,
   isSignInWithEmailLink,
@@ -73,8 +76,21 @@ const Navbar = () => {
         console.log({ email, handleSendEmailLink });
 
         await handleSendEmailLink(email);
+
         // Close the modal or perform other actions after sending the link
         setEmailModalIsOpen(false);
+
+        // Display a success toast after sending the email
+        toast.success("Email has been sent successfully!", {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       } catch (error) {
         console.error("Error sending email link:", error);
         // Handle the error (e.g., display an error message)
@@ -119,6 +135,7 @@ const Navbar = () => {
 
   return (
     <nav className="relative flex items-center justify-between sm:h-10 md:justify-center py-6 px-4 p-5 bg-gray-700 pt-9 pb-9 pr-9">
+      <ToastContainer />
       <div className="flex items-center flex-1 md:absolute md:inset-y-0 md:left-0">
         <div className="flex items-center justify-between w-full md:w-auto">
           <div className="-mr-2 flex items-center md:hidden">
