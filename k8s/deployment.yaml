@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trademate
+spec:
+  selector:
+    matchLabels:
+      app: trademate-k8s
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: trademate-k8s
+    spec:
+      containers:
+        - name: trademate-k8s
+          image: gauravmehla/trademate-k8s
+          ports:
+            - containerPort: 3000
