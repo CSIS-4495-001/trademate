@@ -1,4 +1,4 @@
-<center>![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.002.png)</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.002.png)
 
 #**TradeMate** A Barter System Platform
 
@@ -54,21 +54,15 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 We've implemented a robust authentication system to secure the platform. Users can Sign up using their Google credentials or use password less login using magic link, providing a seamless and secure authentication process. This feature helps protect user data and ensures that only authorized individuals can access the platform.
 
-<center>
-	![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.007.png)
-</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.007.png)
 
 This Google based authentication uses OAuth. When a user opts to sign up via Google, your application redirects them to Google's authentication server, where they grant permission for your app to access their account. Upon approval, Google responds with an authorization code, which your app exchanges for an access token. This token allows your app to retrieve user information from Google, enabling the creation of an account on your platform. This way users don’t have to go through a registration process and can login password less.
 
-<center>
-	![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.008.png)
-</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.008.png)
 
 Magic link registration streamlines sign-up by sending users a unique link via email after they provide their email address on the registration page. When the user clicks the magic link, it verifies their identity and initiates the account creation process, again using this way users will be able to sign up and login password less.
 
-<center>
-	![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.009.png)
-</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.009.png)
 
 ### <a name="_page8_x69.00_y145.00"></a>Session Management
 
@@ -78,49 +72,45 @@ The platform maintains user sessions until the token expires or the user activel
 
 We have implemented an Explore page where users can view all the nearby listings in a map view, which sort of mimics a sense of treasure map for finding cool things nearby. You can zoom in and out, move around, and discover what's going on near you. And when you find something of your interest, you can go ahead and start a conversation.
 
-<center>
-	![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.010.png)
-</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.010.png)
 
 Users have the option to view detailed information about a listing by clicking on the respective pin. Upon clicking, a card will pop up, presenting key details of the post. This includes a description, title, location, and price. There are buttons for users to directly send a message or report the listing if needed. This straightforward design aims to provide users with a seamless experience in accessing and interacting with the details of each listing.
 
-<center>
-	![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.011.png)
-</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.011.png)
 
 ### <a name="_page9_x69.00_y541.00"></a>Maps Integration
 
 Our Explore page relies on the Google Maps API to provide users with an efficient location- based experience. By utilizing this API, we effortlessly obtain the user's current location and we also implemented logic to ensures that the listings presented on the map are within the user travel and price range .
 
-<center>![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.012.png)</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.012.png)
 
 Users have the flexibility to expand their search scope by utilizing the (Km) dropdown feature. Within this dropdown, users can select a search radius ranging from 1 kilometre to 30 kilometres.
 
-<center>![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.014.png)</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.014.png)
 
 Users can change the price range by clicking on the “More” button and entering the specific price range they are looking for. After clicking “Apply”, only the listings within that particular range will be displayed, making it easier for users to find options that fit their price range.
 
-<center>![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.015.png)</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.015.png)
 
 Users have the capability to chat directly with the listing owner by clicking on the Message button. Upon click, a window prompt will appear, prompting the user to input a connection message. To simplify the process, the prompt comes pre-filled with a default message—“Hi, I'm interested in your post.” Once the user presses "Ok," a connection is established in the Firebase Database with the specified connection message, you can then go to Chat Page to continue the conversation.
 
-<center>![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.016.png)</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.016.png)
 
 Users can also utilize the Report button for listings that may raise concerns. By clicking on the Report button, a window prompt will appear, allowing users to provide details about the issue without any pre-filled content. Users can input their concerns or comments regarding the specific listing, and upon pressing "Ok," a report is submitted and saved in the Firebase database which the admin can view and take action.
 
-<center>![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.017.png)</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.017.png)
 
 ### Chat
 
 To send a message, users can simply type their message into the input field and then press the "Send" button or hit the "Enter" key. The chat functionality operates in real-time, allowing users to engage in seamless and instant communication with one another.
 
-<center>![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.024.png)</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.024.png)
 
 Users have the option to send media such as images, videos, and gifs. To do so, users can click on the "+" icon, which opens a menu for selecting the desired media. Once the media is chosen, users can press the "Send" button to share it within the chat.
 
-<center>![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.025.png)</center>
+![](img/Aspose.Words.56995fec-9dda-45f5-a5aa-305a3ac4d90c.025.png)
 
->  There are many more features. For More details about this project - [Click here](https://drive.google.com/file/d/1dubyT8jCCKh6sua3DWj73-_k1AjhIiKr/view?usp=sharing)
+> There are many more features. For More details about this project - [Click here](https://drive.google.com/file/d/1dubyT8jCCKh6sua3DWj73-_k1AjhIiKr/view?usp=sharing)
 
 ### <a name="_page31_x69.00_y108.00"></a>**Lessons Learnt**
 
